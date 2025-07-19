@@ -1,0 +1,168 @@
+/* Editing Bar */
+
+.editing-bar-container {
+  width: 100%;
+  max-height: 25vh;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  border: 1px solid #e8e8e8;
+  margin: 0 20px;
+}
+
+.editing-bar-container-zoomable {
+  width: 100%;
+  overflow: auto;
+  position: relative;
+}
+
+.editing-bar-dragover {
+  border: 2px dashed #4f8cff;
+  background: #eaf3ff;
+  box-shadow: 0 0 12px #4f8cff55;
+  transition: background 0.2s, border 0.2s, box-shadow 0.2s;
+}
+
+/* Video Track */
+
+.video-track {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 80px;
+  margin-bottom: 8px;
+}
+
+/* Video Block */
+
+.video-block-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-block {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  min-width: 0;
+}
+
+.block-image-premiere {
+  position: absolute;
+  top: 0;
+  left: 4px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  pointer-events: none;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.block-thumbnail-premiere {
+  width: auto;
+  height: 75%;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.block-filename-premiere {
+  font-size: 10px;
+  color: #222;
+  background: rgba(255,255,255,0.8);
+  padding: 0 2px;
+  border-radius: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Video Block Trim Bars */
+
+.trim-bar {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 15px;
+  background-color: rgba(0, 0, 0, 0.4);
+  cursor: ew-resize;
+}
+
+.trim-bar.left {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.trim-bar.right {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.white-bar {
+  height: 80%;
+  width: 2px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Pointers */
+
+.current-pointer-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.top-arrow {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-radius: 5px;
+  transform: translateX(-50%);
+}
+
+.bar {
+  width: 3px;
+  border-radius: 3px;
+  transform: translateX(-50%);
+}
+
+/* Time Track */
+
+.timetrack-label {
+  position: absolute;
+  transform: translateX(-50%);
+  transition: opacity 0.3s, top 0.3s;
+  opacity: 1;
+  top: 0;
+}
+
+.fade-in {
+  opacity: 1;
+  top: 0;
+}
+
+.fade-out {
+  opacity: 0;
+  top: 12px;
+  pointer-events: none;
+}

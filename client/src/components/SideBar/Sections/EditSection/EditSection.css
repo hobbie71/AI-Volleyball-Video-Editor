@@ -1,0 +1,79 @@
+.edit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 8px 0;
+}
+
+.edit-section h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+  color: #1976d2;
+}
+
+.edit-section label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+  color: #23272f;
+  gap: 4px;
+}
+
+.edit-section input[type="range"] {
+  padding: 6px 10px;
+  border: 1px solid #b0b3b8;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin-top: 2px;
+}
+
+.edit-section input[type="range"] {
+  accent-color: #1976d2;
+  height: 4px;
+  margin-top: 8px;
+}
+
+.edit-section input[type="number"] {
+  border: none;
+  outline: #1976d2 2px solid;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin: 0px 10px;
+  max-width: 80px;
+  appearance: textfield;
+  text-align: center;
+
+  /* Hide number input spinners for Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  /* Hide number input spinners for Firefox */
+  & {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+}
+
+.edit-section span {
+  font-size: 0.95rem;
+  color: #1976d2;
+  margin-left: 8px;
+  align-self: flex-end;
+}
+
+.edit-section .position-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.edit-section .position-span {
+  user-select: none;
+  cursor: ew-resize;
+}
+
+.edit-section div {
+  min-width: 60px;
+}
