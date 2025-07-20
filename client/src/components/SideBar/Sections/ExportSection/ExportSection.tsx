@@ -32,9 +32,7 @@ const ExportSection = ({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    setTimeout(() => {
-      URL.revokeObjectURL(url);
-    }, 100);
+    URL.revokeObjectURL(url);
   };
 
   const handleResolutionChange = (resolution: string) => {

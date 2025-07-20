@@ -38,8 +38,6 @@ const VideoPlayer = ({ videoPlayerIsReady }: Props) => {
     drawFrameAtTime(0);
   };
 
-  // TODO: fix why the fuck the videoPlayer just cant make it through splits anymore
-
   useEffect(() => {
     if (!isVideoPlaying) return;
 
@@ -130,8 +128,6 @@ const VideoPlayer = ({ videoPlayerIsReady }: Props) => {
     drawFrameAtCurrentTime,
     videoRefs,
   ]);
-
-  // TODO change video ID to be unique for every different video AND video splits
 
   return (
     <div>

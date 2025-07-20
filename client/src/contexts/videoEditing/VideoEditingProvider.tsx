@@ -35,6 +35,56 @@ export const VideoEditingProvider: React.FC<{ children: React.ReactNode }> = ({
     [allTimelineVideos, currentTimeRef]
   );
 
+  const drawFrameAtCurrentTime = useCallback(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+
+    const currentVideo = getCurrentVideoPlaying();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!currentVideo) return;
+
+    const videoElement = videoRefs.current[currentVideo.id];
+
+    if (currentVideo.motionEffects) {
+      const { x, y, scale, rotation } = currentVideo.motionEffects;
+
+      const angleRad = (rotation * Math.PI) / 180;
+
+      const vidWidth = videoElement.videoWidth;
+      const vidHeight = videoElement.videoHeight;
+
+      const centerX = vidWidth / 2;
+      const centerY = vidHeight / 2;
+
+      ctx.clearRect(0, 0, vidWidth, vidHeight);
+      ctx.save();
+
+      // Move canvas origin to center
+      ctx.translate(centerX + x, centerY + y);
+
+      // Apply rotation
+      ctx.rotate(angleRad);
+
+      // Apply scale
+      ctx.scale(scale, scale);
+
+      // Draw video frame centered
+      ctx.drawImage(
+        videoElement,
+        -vidWidth / 2,
+        -vidHeight / 2,
+        vidWidth,
+        vidHeight
+      );
+
+      ctx.restore();
+    } else {
+      ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    }
+  }, [canvasRef, videoRefs, getCurrentVideoPlaying]);
+
   const drawFrameAtTime = useCallback(
     async (timelineTime: number) => {
       const canvas = canvasRef.current;
@@ -61,9 +111,9 @@ export const VideoEditingProvider: React.FC<{ children: React.ReactNode }> = ({
         videoElement.currentTime = timeInVideo;
       });
 
-      ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      drawFrameAtCurrentTime();
     },
-    [canvasRef, videoRefs, getCurrentVideoPlaying]
+    [canvasRef, videoRefs, getCurrentVideoPlaying, drawFrameAtCurrentTime]
   );
 
   const setTimelineTime = useCallback(
@@ -176,22 +226,6 @@ export const VideoEditingProvider: React.FC<{ children: React.ReactNode }> = ({
     setTimelineDuration,
     updateCurrentTime,
   ]);
-
-  const drawFrameAtCurrentTime = useCallback(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    if (!canvas || !ctx) return;
-
-    const currentVideo = getCurrentVideoPlaying();
-    if (!currentVideo) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      return;
-    }
-
-    const videoElement = videoRefs.current[currentVideo.id];
-
-    ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-  }, [canvasRef, videoRefs, getCurrentVideoPlaying]);
 
   const pauseAllVideos = useCallback(() => {
     const videoElements = videoRefs.current;

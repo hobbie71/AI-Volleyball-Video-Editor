@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useVideoEditing } from "../../../../contexts/videoEditing/VideoEditingContext";
+import { useVideo } from "../../../../contexts/video/VideoContext";
 import "./EditSection.css";
 
 const DRAG_THRESHOLD = 3; // pixels
@@ -7,6 +8,11 @@ const DRAG_THRESHOLD = 3; // pixels
 const EditSection = () => {
   const { currentVideoSelected, updateCurrentVideoMotionEffects } =
     useVideoEditing();
+
+  const { exportSettings } = useVideo();
+  const [resWidth, resHeight] = exportSettings.resolution
+    .split("x")
+    .map(Number);
 
   // Position states
   const [positionX, setPositionX] = useState<number>(
@@ -30,13 +36,66 @@ const EditSection = () => {
   const dragStartMouseX_Y = useRef<number | null>(null);
   const dragStartedY = useRef<boolean>(false);
 
-  // Other states
+  // Scale States
+  const [minScale, setMinScale] = useState<number>(1);
   const [scale, setScale] = useState(
     currentVideoSelected?.motionEffects?.scale || 1
   );
   const [rotation, setRotation] = useState(
-    currentVideoSelected?.motionEffects?.x || 0
+    currentVideoSelected?.motionEffects?.rotation || 0
   );
+
+  // TODO: Make sure this actually works
+  const getSafeScale = (
+    rotationDegrees: number,
+    resWidth: number,
+    resHeight: number
+  ): number => {
+    if (resWidth <= 0 || resHeight <= 0) return 1;
+
+    // Convert degrees to radians for math functions
+    const angleRadians = (rotationDegrees * Math.PI) / 180;
+
+    const isWidthLonger = resWidth >= resHeight;
+    const longerSide = isWidthLonger ? resWidth : resHeight;
+    const shorterSide = isWidthLonger ? resHeight : resWidth;
+
+    const absSin = Math.abs(Math.sin(angleRadians));
+    const absCos = Math.abs(Math.cos(angleRadians));
+
+    if (
+      shorterSide <= 2 * absSin * absCos * longerSide ||
+      Math.abs(absSin - absCos) < 1e-10
+    ) {
+      // Half-constrained case: crop corners touch longer side
+      const halfShortSide = 0.5 * shorterSide;
+      const maxInnerWidth = isWidthLonger
+        ? halfShortSide / absSin
+        : halfShortSide / absCos;
+      const maxInnerHeight = isWidthLonger
+        ? halfShortSide / absCos
+        : halfShortSide / absSin;
+
+      const scale = Math.max(
+        resWidth / maxInnerWidth,
+        resHeight / maxInnerHeight
+      );
+      return scale;
+    } else {
+      // Fully constrained case: crop touches all 4 sides
+      const cosDoubleAngle = absCos * absCos - absSin * absSin;
+      const maxInnerWidth =
+        (resWidth * absCos - resHeight * absSin) / cosDoubleAngle;
+      const maxInnerHeight =
+        (resHeight * absCos - resWidth * absSin) / cosDoubleAngle;
+
+      const scale = Math.max(
+        resWidth / maxInnerWidth,
+        resHeight / maxInnerHeight
+      );
+      return scale;
+    }
+  };
 
   // --- Drag logic for X ---
   const onXMouseDown = (e: React.MouseEvent<HTMLSpanElement>) => {
@@ -131,6 +190,19 @@ const EditSection = () => {
     });
   }, [positionX, positionY, scale, rotation, updateCurrentVideoMotionEffects]);
 
+  // Update minScale
+  useEffect(() => {
+    const newMinScale = Math.max(
+      1,
+      getSafeScale(rotation, resWidth, resHeight)
+    );
+    setMinScale(newMinScale);
+
+    setScale((prevScale) =>
+      newMinScale > prevScale ? newMinScale : prevScale
+    );
+  }, [rotation, resWidth, resHeight]);
+
   if (!currentVideoSelected) {
     return (
       <div className="sidebar-section edit-section">
@@ -223,8 +295,8 @@ const EditSection = () => {
         Scale (Zoom)
         <input
           type="range"
-          value={scale}
-          min={0.1}
+          value={minScale}
+          min={getSafeScale(rotation, resWidth, resHeight)}
           max={10}
           step={0.01}
           onChange={(e) => setScale(Number(e.target.value))}

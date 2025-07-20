@@ -8,22 +8,17 @@ import {
 
 export const exportVideo = async (req: Request, res: Response) => {
   try {
-    console.log("🚀 Export started - 0%");
-
     // Create project folder
     const projectFolderDir = createProjectFolderDirectory();
-    console.log("📁 Project folder created - 5%");
 
     const allVideos = req.body.videos; // Should be array of Video metadata
     const exportSettings = req.body.exportSettings; // Should be an object of export settings
 
-    console.log("🎬 Starting video trimming - 10%");
     const trimmedPaths = await trimVideos(
       projectFolderDir,
       allVideos,
       exportSettings
     );
-    console.log("✂️ Video trimming completed - 70%");
 
     // Merge Videos if multiple videos
     let outputPath: string;

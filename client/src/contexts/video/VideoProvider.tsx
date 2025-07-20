@@ -138,6 +138,8 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({
           reject(err);
         }
       })();
+
+      setIsLoading(false);
     });
   };
 
