@@ -1,32 +1,36 @@
-export const pauseAllVideos = () => {
-  const videoElements = videoRefs.current;
+import { TimelineVideo, VideoElementObject } from "../../../types/video.types";
 
+export const pauseAllVideos = (videoElements: VideoElementObject) => {
   Object.values(videoElements).forEach((video) => {
     video.pause();
   });
 };
 
-export const resetAllVideos = () => {
-  allTimelineVideos.forEach((video) => {
-    const videoElement = videoRefs.current[video.id];
+export const resetAllVideos = (
+  timelineVideos: TimelineVideo[],
+  videoElements: VideoElementObject
+) => {
+  timelineVideos.forEach((video) => {
+    const videoElement = videoElements[video.id];
+    if (!videoElement) return;
+
     videoElement.pause();
     videoElement.currentTime = video.startTime;
   });
 };
 
-export const setTimelineTime = (newTime: number, showPreview = false) => {
-  drawFrameAtTime(newTime);
-  if (!showPreview) updateCurrentTime(newTime);
+export const resetAllVideosExceptVideo = (
+  timelineVideos: TimelineVideo[],
+  videoElements: VideoElementObject,
+  exceptVideo: TimelineVideo
+) => {
+  timelineVideos.forEach((video) => {
+    if (video === exceptVideo) return;
+
+    const videoElement = videoElements[video.id];
+    if (!videoElement) return;
+
+    videoElement.pause();
+    videoElement.currentTime = video.startTime;
+  });
 };
-
-export const resetAllVideosExceptVideoPlaying = () => {
-    const currentVideo = getCurrentVideoPlaying();
-
-    allTimelineVideos.forEach((video) => {
-      if (video === currentVideo) return;
-
-      const videoElement = videoRefs.current[video.id];
-      videoElement.pause();
-      videoElement.currentTime = video.startTime;
-    }
-}

@@ -1,8 +1,9 @@
 import { createContext, useRef } from "react";
+import { VideoElementObject } from "../../../../types/video.types";
 
 type VideoRenderingContextType = {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
-  videoRefs: React.RefObject<Record<string, HTMLVideoElement>>;
+  videoRefs: React.RefObject<VideoElementObject>;
 };
 
 const VideoRenderingContext = createContext<
@@ -15,7 +16,7 @@ export const VideoRenderingProvider = ({
   children: React.ReactNode;
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRefs = useRef<Record<string, HTMLVideoElement>>({});
+  const videoRefs = useRef<VideoElementObject>({});
 
   return (
     <VideoRenderingContext.Provider value={{ canvasRef, videoRefs }}>

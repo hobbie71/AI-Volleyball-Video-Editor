@@ -4,9 +4,9 @@ import { TimelineVideo } from "../../../../types/video.types";
 
 type TimelineContextType = {
   timelineDuration: number;
-  setTimelineDuration: (newDurationSeconds: number) => void;
+  setTimelineDuration: React.Dispatch<React.SetStateAction<number>>;
   timelineVideos: TimelineVideo[];
-  setTimelineVideos: (newTimelineVideos: TimelineVideo[]) => void;
+  setTimelineVideos: React.Dispatch<React.SetStateAction<TimelineVideo[]>>;
 };
 
 const TimelineContext = createContext<undefined | TimelineContextType>(

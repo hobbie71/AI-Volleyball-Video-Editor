@@ -8,10 +8,11 @@ import { useCurrentTime } from "../context/CurrentTime/useCurrentTime";
 export const useCurrentTimelineVideo = () => {
   const { currentTimeRef } = useCurrentTime();
   const { timelineVideos } = useTimeline();
-  const currentVideo = getCurrentTimelineVideoPlaying(
+
+  const { currentVideo, index } = getCurrentTimelineVideoPlaying(
     currentTimeRef.current,
     timelineVideos
   );
 
-  return { currentVideo };
+  return { currentVideo, currentVideoIndex: index };
 };

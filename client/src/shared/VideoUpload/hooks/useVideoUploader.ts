@@ -5,7 +5,7 @@ import { getVideoMetaData } from "../lib/getVideoMetaData";
 import { uploadVideoToBackend } from "../lib/uploadVideoToBackend";
 
 // Hook Imports
-import { useVideoTimeline } from "../../../features/EditingBar/VideoTimeline/hooks/useVideoTimline";
+import { useVideoTimeline } from "../../../features/EditingBar/VideoTimeline/hooks/useVideoTimeline";
 
 // Type Imports
 import { Video } from "../../../types/video.types";

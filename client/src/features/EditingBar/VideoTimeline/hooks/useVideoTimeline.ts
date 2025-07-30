@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { Video } from "../../../../types/video.types";
 
 // Lib imports
-import { getUpdatedTimelineWithVideo } from "../libs/getTimelineWithNewVideo";
+import { getTimelineWithNewVideo } from "../libs/getTimelineWithNewVideo";
 import { getInitTimelineWithVideo } from "../libs/getInitTimelineWithVideo";
 
 // Context imports
@@ -16,7 +16,7 @@ export const useVideoTimeline = () => {
 
   const addVideoToTimeline = useCallback(
     (newVideo: Video) => {
-      const { updatedTimeline, updatedDuration } = getUpdatedTimelineWithVideo(
+      const { updatedTimeline, updatedDuration } = getTimelineWithNewVideo(
         newVideo,
         timelineVideos
       );

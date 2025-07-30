@@ -35,3 +35,5 @@ export type TimelineVideo = {
   timelineEndTime: number;
   motionEffects: MotionEffects | null;
 };
+
+export type VideoElementObject = Record<string, HTMLVideoElement>;

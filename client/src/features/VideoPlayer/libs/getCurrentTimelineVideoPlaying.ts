@@ -4,11 +4,12 @@ export const getCurrentTimelineVideoPlaying = (
   timeSeconds: number,
   timelineVideos: TimelineVideo[]
 ) => {
-  const currentVideo = timelineVideos.find(
+  const index = timelineVideos.findIndex(
     (video) =>
       timeSeconds >= video.timelineStartTime &&
       timeSeconds < video.timelineEndTime
   );
+  const currentVideo = index !== -1 ? timelineVideos[index] : null;
 
-  return currentVideo ? currentVideo : null;
+  return { currentVideo, index };
 };

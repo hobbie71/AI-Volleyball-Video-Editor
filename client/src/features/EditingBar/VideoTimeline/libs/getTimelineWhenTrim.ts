@@ -6,7 +6,6 @@ export const getTimelineWhenTrim = (
   timelineVideos: TimelineVideo[]
 ) => {
   const videoIndex = timelineVideos.findIndex((vid) => vid === video);
-  if (!Number.isInteger(videoIndex)) return;
 
   video.timelineEndTime -= amountTrimmed;
 
@@ -16,7 +15,5 @@ export const getTimelineWhenTrim = (
     currentVideo.timelineStartTime -= amountTrimmed;
     currentVideo.timelineEndTime -= amountTrimmed;
   }
-
-  setTimelineDuration(timelineDuration - amountTrimmed);
   return timelineVideos;
 };

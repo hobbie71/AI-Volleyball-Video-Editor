@@ -1,43 +1,49 @@
 import { useCallback } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+// Context imports
+import { useCurrentTime } from "../../VideoPlayer/context/CurrentTime/useCurrentTime";
+import { useTimeline } from "../VideoTimeline/context/useTimeline";
+
+// Hook imports
+import { useCurrentTimelineVideo } from "../../VideoPlayer/hooks/useCurrentTimelineVideo";
+
+// Type imports
+import { TimelineVideo } from "../../../types/video.types";
 
 export const useSplitVideo = () => {
+  const { currentTimeRef } = useCurrentTime();
+  const { currentVideo, currentVideoIndex } = useCurrentTimelineVideo();
+  const { setTimelineVideos } = useTimeline();
+
   const splitVideoAtTime = useCallback(
     (time = currentTimeRef.current) => {
-      const currentVideo = getCurrentVideoPlaying();
-      if (!currentVideo)
-        throw new Error("No currentVideo. Can't splitVideoAtTime");
+      if (!currentVideo) return;
 
-      if (currentVideo.timelineStartTime >= time - 1) return;
-      if (currentVideo.timelineEndTime <= time + 1) return;
-
-      const videoIndex = allTimelineVideos.findIndex(
-        (video) => video === currentVideo
-      );
-
-      const splitTime =
+      const timeInVideo =
         currentVideo.startTime + (time - currentVideo.timelineStartTime);
 
-      const videoLeft = { ...currentVideo };
-      videoLeft.id = uuidv4();
-      videoLeft.endTime = splitTime;
-      videoLeft.timelineEndTime = time;
+      const videoLeft: TimelineVideo = {
+        ...currentVideo,
+        id: uuidv4(),
+        endTime: timeInVideo,
+        timelineEndTime: time,
+      };
 
-      const videoRight = { ...currentVideo };
-      videoRight.id = uuidv4();
-      videoRight.startTime = splitTime;
-      videoRight.timelineStartTime = time;
+      const videoRight: TimelineVideo = {
+        ...currentVideo,
+        id: uuidv4(),
+        startTime: timeInVideo,
+        timelineStartTime: time,
+      };
 
-      const updatedAllVideos = [...allTimelineVideos];
-      updatedAllVideos.splice(videoIndex, 1, videoLeft, videoRight);
-      setAllTimelineVideos(updatedAllVideos);
-      setCurrentVideoSelected(null);
+      setTimelineVideos((prev) => {
+        const newTimeline = [...prev];
+        newTimeline.splice(currentVideoIndex, 1, videoLeft, videoRight);
+        return newTimeline;
+      });
     },
-    [
-      allTimelineVideos,
-      currentTimeRef,
-      getCurrentVideoPlaying,
-      setAllTimelineVideos,
-    ]
+    [currentTimeRef, currentVideo, currentVideoIndex, setTimelineVideos]
   );
 
   return { splitVideoAtTime };

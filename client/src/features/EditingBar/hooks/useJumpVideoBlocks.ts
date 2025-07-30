@@ -1,70 +1,67 @@
 import { useCallback } from "react";
 
+// Hook imports
+import { useCurrentTimelineVideo } from "../../VideoPlayer/hooks/useCurrentTimelineVideo";
+import { useVideoPlaybackControl } from "../../VideoPlayer/hooks/useVideoPlaybackControl";
+
+// Context import
+import { useTimeline } from "../VideoTimeline/context/useTimeline";
+import { useCurrentTime } from "../../VideoPlayer/context/CurrentTime/useCurrentTime";
+
 export const useJumpVideoBlocks = () => {
+  const { currentVideo, currentVideoIndex } = useCurrentTimelineVideo();
+  const { setIsVideoPlaying, currentTimeRef, updateCurrentTime } =
+    useCurrentTime();
+  const { resetAllVideoElements } = useVideoPlaybackControl();
+  const { timelineVideos, timelineDuration } = useTimeline();
+
   const jumpToNextBlock = useCallback(() => {
-    const currentVideo = getCurrentVideoPlaying();
-    if (!currentVideo)
-      throw new Error("No currentVideo. Can't jumpToNextBlock");
+    if (!currentVideo) return;
 
     setIsVideoPlaying(false);
+    resetAllVideoElements();
 
-    const index = allTimelineVideos.findIndex(
-      (video) => video === currentVideo
-    );
-
-    if (index === -1) return;
-
-    resetAllVideos();
-
-    if (index === allTimelineVideos.length - 1) {
-      setTimelineTime(timelineDuration - 0.01);
-      resetAllVideos();
+    if (currentVideoIndex === timelineVideos.length - 1) {
+      updateCurrentTime(timelineDuration - 0.01);
     } else {
-      const nextVideo = allTimelineVideos[index + 1];
-      setTimelineTime(nextVideo.timelineStartTime + 0.01);
+      const nextVideo = timelineVideos[currentVideoIndex + 1];
+      updateCurrentTime(nextVideo.timelineStartTime + 0.01);
     }
   }, [
-    allTimelineVideos,
-    getCurrentVideoPlaying,
-    resetAllVideos,
+    currentVideo,
+    currentVideoIndex,
+    resetAllVideoElements,
     setIsVideoPlaying,
-    setTimelineTime,
     timelineDuration,
+    timelineVideos,
+    updateCurrentTime,
   ]);
 
   const jumpToPreviousBlock = useCallback(() => {
-    const currentVideo = getCurrentVideoPlaying();
-    if (!currentVideo)
-      throw new Error("No currentVideo. Can't jumpToNextBlock");
+    if (!currentVideo) return;
 
     setIsVideoPlaying(false);
+    resetAllVideoElements();
 
-    const index = allTimelineVideos.findIndex(
-      (video) => video === currentVideo
-    );
-
-    if (index === -1) return;
-
-    resetAllVideos();
-
-    if (index === 0) {
-      setTimelineTime(0);
+    if (currentVideoIndex === 0) {
+      updateCurrentTime(0);
     } else if (
       currentTimeRef.current ===
       currentVideo.timelineStartTime + 0.01
     ) {
-      const prevVideo = allTimelineVideos[index - 1];
-      setTimelineTime(prevVideo.timelineStartTime + 0.01);
+      const prevVideo = timelineVideos[currentVideoIndex - 1];
+      updateCurrentTime(prevVideo.timelineStartTime + 0.01);
     } else {
-      setTimelineTime(currentVideo.timelineStartTime + 0.01);
+      updateCurrentTime(currentVideo.timelineStartTime + 0.01);
     }
   }, [
-    allTimelineVideos,
     currentTimeRef,
-    getCurrentVideoPlaying,
-    resetAllVideos,
+    currentVideo,
+    currentVideoIndex,
+    resetAllVideoElements,
     setIsVideoPlaying,
-    setTimelineTime,
+    timelineVideos,
+    updateCurrentTime,
   ]);
 
   return { jumpToNextBlock, jumpToPreviousBlock };

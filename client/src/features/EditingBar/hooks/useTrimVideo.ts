@@ -1,8 +1,19 @@
+import { useCallback } from "react";
+
 // Hook imports
 import { useCurrentTimelineVideo } from "../../VideoPlayer/hooks/useCurrentTimelineVideo";
 
+// Lib imports
+import { getTimelineWhenTrim } from "../VideoTimeline/libs/getTimelineWhenTrim";
+
+// Context imports
+import { useTimeline } from "../VideoTimeline/context/useTimeline";
+import { useCurrentTime } from "../../VideoPlayer/context/CurrentTime/useCurrentTime";
+
 export const useTrimVideo = () => {
   const { currentVideo } = useCurrentTimelineVideo();
+  const { setTimelineVideos, setTimelineDuration } = useTimeline();
+  const { setIsVideoPlaying, currentTimeRef } = useCurrentTime();
 
   const trimLeftSide = useCallback(() => {
     if (!currentVideo) return;
@@ -13,18 +24,20 @@ export const useTrimVideo = () => {
       currentTimeRef.current - currentVideo.timelineStartTime;
     currentVideo.startTime += amountTrimmed;
 
-    updateVideoTimesWhenTrim(currentVideo, amountTrimmed);
-    setTimelineTime(currentVideo.timelineStartTime + 0.01);
+    setTimelineVideos((prev) =>
+      getTimelineWhenTrim(currentVideo, amountTrimmed, prev)
+    );
+    setTimelineDuration((prev) => prev - amountTrimmed);
+    // setTimelineTime(currentVideo.timelineStartTime + 0.01);
   }, [
     currentTimeRef,
-    getCurrentVideoPlaying,
+    currentVideo,
     setIsVideoPlaying,
-    setTimelineTime,
-    updateVideoTimesWhenTrim,
+    setTimelineDuration,
+    setTimelineVideos,
   ]);
 
   const trimRightSide = useCallback(() => {
-    const currentVideo = getCurrentVideoPlaying();
     if (!currentVideo) return;
 
     setIsVideoPlaying(false);
@@ -32,14 +45,17 @@ export const useTrimVideo = () => {
     const amountTrimmed = currentVideo.timelineEndTime - currentTimeRef.current;
     currentVideo.endTime -= amountTrimmed;
 
-    updateVideoTimesWhenTrim(currentVideo, amountTrimmed);
-    resetAllVideos();
+    setTimelineVideos((prev) =>
+      getTimelineWhenTrim(currentVideo, amountTrimmed, prev)
+    );
+    setTimelineDuration((prev) => prev - amountTrimmed);
+    // resetAllVideos();
   }, [
-    currentTimeRef,
-    getCurrentVideoPlaying,
-    resetAllVideos,
     setIsVideoPlaying,
-    updateVideoTimesWhenTrim,
+    setTimelineVideos,
+    setTimelineDuration,
+    currentTimeRef,
+    currentVideo,
   ]);
 
   return { trimLeftSide, trimRightSide };
