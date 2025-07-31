@@ -9,7 +9,7 @@ import {
 
 // Hook imports
 import { useVideoRendering } from "../context/VideoRendering/useVideoRendering";
-import { useTimeline } from "../../EditingBar/VideoTimeline/context/useTimeline";
+import { useTimeline } from "../../EditingBar/context/Timeline/useTimeline";
 import { TimelineVideo } from "../../../types/video.types";
 
 export const useVideoPlaybackControl = () => {

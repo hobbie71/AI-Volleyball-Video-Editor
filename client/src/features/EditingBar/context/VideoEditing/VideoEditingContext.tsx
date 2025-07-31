@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { Video } from "../../../types/video.types";
+import { Video } from "../../../../types/video.types";
 
 type VideoEditingContextType = {
   videoSelected: Video | null;

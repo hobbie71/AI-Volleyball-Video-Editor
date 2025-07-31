@@ -2,7 +2,7 @@
 import { getCurrentTimelineVideoPlaying } from "../libs/getCurrentTimelineVideoPlaying";
 
 // Hook imports
-import { useTimeline } from "../../EditingBar/VideoTimeline/context/useTimeline";
+import { useTimeline } from "../../EditingBar/context/Timeline/useTimeline";
 import { useCurrentTime } from "../context/CurrentTime/useCurrentTime";
 
 export const useCurrentTimelineVideo = () => {

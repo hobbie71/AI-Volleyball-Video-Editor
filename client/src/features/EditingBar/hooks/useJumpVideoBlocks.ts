@@ -5,7 +5,7 @@ import { useCurrentTimelineVideo } from "../../VideoPlayer/hooks/useCurrentTimel
 import { useVideoPlaybackControl } from "../../VideoPlayer/hooks/useVideoPlaybackControl";
 
 // Context import
-import { useTimeline } from "../VideoTimeline/context/useTimeline";
+import { useTimeline } from "../context/Timeline/useTimeline";
 import { useCurrentTime } from "../../VideoPlayer/context/CurrentTime/useCurrentTime";
 
 export const useJumpVideoBlocks = () => {

@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { getTimelineWhenMoved } from "../VideoTimeline/libs/getTimelineWhenMoved";
 
 // Hook imports
-import { useTimeline } from "../VideoTimeline/context/useTimeline";
+import { useTimeline } from "../context/Timeline/useTimeline";
 
 // Type imports
 import { TimelineVideo } from "../../../types/video.types";

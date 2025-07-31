@@ -8,7 +8,7 @@ import { getTimelineWithNewVideo } from "../libs/getTimelineWithNewVideo";
 import { getInitTimelineWithVideo } from "../libs/getInitTimelineWithVideo";
 
 // Context imports
-import { useTimeline } from "../context/useTimeline";
+import { useTimeline } from "../../context/Timeline/useTimeline";
 
 export const useVideoTimeline = () => {
   const { timelineVideos, setTimelineVideos, setTimelineDuration } =

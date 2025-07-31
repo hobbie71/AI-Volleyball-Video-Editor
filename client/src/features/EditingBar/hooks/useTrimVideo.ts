@@ -7,7 +7,7 @@ import { useCurrentTimelineVideo } from "../../VideoPlayer/hooks/useCurrentTimel
 import { getTimelineWhenTrim } from "../VideoTimeline/libs/getTimelineWhenTrim";
 
 // Context imports
-import { useTimeline } from "../VideoTimeline/context/useTimeline";
+import { useTimeline } from "../context/Timeline/useTimeline";
 import { useCurrentTime } from "../../VideoPlayer/context/CurrentTime/useCurrentTime";
 
 export const useTrimVideo = () => {

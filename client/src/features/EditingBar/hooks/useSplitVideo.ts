@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 // Context imports
 import { useCurrentTime } from "../../VideoPlayer/context/CurrentTime/useCurrentTime";
-import { useTimeline } from "../VideoTimeline/context/useTimeline";
+import { useTimeline } from "../context/Timeline/useTimeline";
 
 // Hook imports
 import { useCurrentTimelineVideo } from "../../VideoPlayer/hooks/useCurrentTimelineVideo";
