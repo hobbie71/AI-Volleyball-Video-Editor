@@ -1,18 +1,46 @@
-import Canvas from "./components/Canvas";
-import VideoElement from "./components/VideoElement";
-import { useVideo } from "../../contexts/video/VideoContext";
+import { useEffect } from "react";
 
+// Style import
 import "./VideoPlayer.css";
 
+// Component imports
+import Canvas from "./components/Canvas";
+import VideoElement from "./components/VideoElement";
+
+// Context imports
+import { useTimeline } from "../EditingBar/context/Timeline/useTimeline";
+
+// Hook imports
+import { useVideoPlaybackControl } from "./hooks/useVideoPlaybackControl";
+import { useCurrentTimelineVideo } from "./hooks/useCurrentTimelineVideo";
+
 const VideoPlayer = () => {
-  const { allTimelineVideos } = useVideo();
+  const { timelineVideos } = useTimeline();
+  const { resetAllVideoElementsExcept, resetAllVideoElements } =
+    useVideoPlaybackControl();
+  const { currentVideo } = useCurrentTimelineVideo();
+
+  useEffect(() => {
+    if (currentVideo) {
+      resetAllVideoElementsExcept(currentVideo);
+    } else {
+      resetAllVideoElements();
+    }
+  }, [
+    timelineVideos,
+    currentVideo,
+    resetAllVideoElements,
+    resetAllVideoElementsExcept,
+  ]);
 
   return (
-    <Canvas height={3840} width={2160}>
-      {allTimelineVideos.map((video) => (
-        <VideoElement key={video.id} id={video.id} url={video.url} />
-      ))}
-    </Canvas>
+    <div className="video-player">
+      <Canvas width={3840} height={2160}>
+        {timelineVideos.map((video) => (
+          <VideoElement key={video.id} id={video.id} url={video.url} />
+        ))}
+      </Canvas>
+    </div>
   );
 };
 

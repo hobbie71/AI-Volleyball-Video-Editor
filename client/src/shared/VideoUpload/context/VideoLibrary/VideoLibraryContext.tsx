@@ -1,9 +1,9 @@
 import { createContext, useCallback, useState } from "react";
-import { Video } from "../../../types/video.types";
+import { Video } from "../../../../types/video.types";
 
 type VideoLibraryContextType = {
   videos: Video[];
-  addVideo: (file: File) => void;
+  addVideo: (video: Video) => void;
   removeVideo: (id: string) => void;
 };
 
@@ -18,14 +18,17 @@ export const VideoLibraryProvider = ({
 }) => {
   const [videos, setVideos] = useState<Video[]>([]);
 
-  const addVideo = useCallback((file: File) => {
-    // setVideos();
+  const addVideo = useCallback((video: Video) => {
+    setVideos((prev) => [...prev, video]);
   }, []);
 
-  const removeVideo = useCallback((id: string) => {
-    const index = videos.findIndex((video) => video.id === id);
-    setVideos((prev) => prev.splice(index, 1));
-  }, []);
+  const removeVideo = useCallback(
+    (id: string) => {
+      const index = videos.findIndex((video) => video.id === id);
+      setVideos((prev) => prev.splice(index, 1));
+    },
+    [videos]
+  );
 
   return (
     <VideoLibraryContext.Provider value={{ videos, addVideo, removeVideo }}>

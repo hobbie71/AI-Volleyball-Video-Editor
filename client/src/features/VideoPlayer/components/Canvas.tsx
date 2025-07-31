@@ -1,42 +1,44 @@
 import { useEffect } from "react";
 
+// Hook imports
+import { useDrawFrame } from "../hooks/useDrawFrame";
+import { useCurrentTimelineVideo } from "../hooks/useCurrentTimelineVideo";
+import { useVideoPlaybackControl } from "../hooks/useVideoPlaybackControl";
+
+// Context imports
+import { useTimeline } from "../../EditingBar/context/Timeline/useTimeline";
+import { useCurrentTime } from "../context/CurrentTime/useCurrentTime";
+import { useVideoRendering } from "../context/VideoRendering/useVideoRendering";
+
 interface Props {
   children?: React.ReactNode;
-  height: number;
   width: number;
+  height: number;
 }
 
-const Canvas = ({ children, height, width }: Props) => {
+const Canvas = ({ children, width, height }: Props) => {
+  const { drawFrameAtCurrentTime, drawFrameAtTime } = useDrawFrame();
+  const { isVideoPlaying, pauseVideo, toggleVideoPlaying } =
+    useVideoPlaybackControl();
+  const { currentVideo, getCurrentVideoElement } = useCurrentTimelineVideo();
+  const { timelineDuration } = useTimeline();
+  const { updateCurrentTime } = useCurrentTime();
+  const { canvasRef } = useVideoRendering();
+
   useEffect(() => {
     if (!isVideoPlaying) return;
-
     let animationFrameId: number;
-    let currentVideo = getCurrentVideoPlaying();
-    if (!currentVideo) return;
-
-    let videoElement = videoRefs.current[currentVideo.id];
-    if (!videoElement) return;
-
-    let prevVideoElement: HTMLVideoElement | null = null;
 
     const drawLoop = () => {
-      const nextVideo = getCurrentVideoPlaying();
-      if (!nextVideo || !currentVideo) return;
+      drawFrameAtCurrentTime();
 
-      if (nextVideo !== currentVideo) {
-        if (prevVideoElement) prevVideoElement.pause();
+      if (!currentVideo) return;
 
-        videoElement = videoRefs.current[nextVideo.id];
-        videoElement.play();
-
-        prevVideoElement = videoElement;
-        currentVideo = nextVideo;
-      }
-
-      if (!videoElement) return;
+      const currentVideoElement = getCurrentVideoElement();
+      if (!currentVideoElement) return;
 
       const newTime =
-        videoElement.currentTime +
+        currentVideoElement.currentTime +
         currentVideo.timelineStartTime -
         currentVideo.startTime;
 
@@ -44,7 +46,7 @@ const Canvas = ({ children, height, width }: Props) => {
       drawFrameAtCurrentTime();
 
       if (newTime >= timelineDuration) {
-        setIsVideoPlaying(false);
+        pauseVideo();
         updateCurrentTime(0);
         drawFrameAtTime(0);
         return;
@@ -57,18 +59,23 @@ const Canvas = ({ children, height, width }: Props) => {
 
     return () => cancelAnimationFrame(animationFrameId);
   }, [
-    isVideoPlaying,
-    getCurrentVideoPlaying,
-    updateCurrentTime,
+    currentVideo,
     drawFrameAtCurrentTime,
     drawFrameAtTime,
-    videoRefs,
-    setIsVideoPlaying,
+    getCurrentVideoElement,
+    isVideoPlaying,
+    pauseVideo,
     timelineDuration,
+    updateCurrentTime,
   ]);
 
   return (
-    <canvas className="canvas" height={height} width={width}>
+    <canvas
+      className="canvas"
+      ref={canvasRef}
+      width={width}
+      height={height}
+      onClick={() => toggleVideoPlaying()}>
       {children}
     </canvas>
   );

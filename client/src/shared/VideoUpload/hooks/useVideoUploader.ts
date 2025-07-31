@@ -11,14 +11,17 @@ import { useVideoTimeline } from "../../../features/EditingBar/VideoTimeline/hoo
 import { Video } from "../../../types/video.types";
 
 // Context Imports
-import { useVideoLibrary } from "../context/useVideoLibrary";
+import { useVideoLibrary } from "../context/VideoLibrary/useVideoLibrary";
+import { useVideoUpload } from "../context/VideoUpload/useVideoLibrary";
 
 export const useVideoUploader = () => {
   const { videos, addVideo } = useVideoLibrary();
   const { initTimelineWithVideo, timelineVideos } = useVideoTimeline();
+  const { isLoading, setIsLoading } = useVideoUpload();
 
   const uploadVideo = useCallback(
     async (files: File | File[]) => {
+      setIsLoading(true);
       const fileArray = Array.isArray(files) ? files : [files];
       const newVideos: Video[] = [];
 
@@ -31,11 +34,12 @@ export const useVideoUploader = () => {
         // Initalize timeline by adding a video block
         if (timelineVideos.length === 0) initTimelineWithVideo(newVideo);
 
-        addVideo(file);
+        addVideo(newVideo);
       }
+      setIsLoading(false);
     },
-    [initTimelineWithVideo, addVideo, timelineVideos.length]
+    [initTimelineWithVideo, addVideo, timelineVideos.length, setIsLoading]
   );
 
-  return { videos, uploadVideo };
+  return { videos, uploadVideo, isLoading };
 };

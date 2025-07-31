@@ -1,4 +1,5 @@
-import { useVideo } from "../../../contexts/video/VideoContext";
+// Context imports
+import { useVideoRendering } from "../context/VideoRendering/useVideoRendering";
 
 interface Props {
   id: string;
@@ -6,7 +7,7 @@ interface Props {
 }
 
 const VideoElement = ({ id, url }: Props) => {
-  const { videoRefs } = useVideo();
+  const { videoRefs } = useVideoRendering();
 
   return (
     <video

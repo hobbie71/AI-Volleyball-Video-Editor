@@ -1,0 +1,23 @@
+.intro-page-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+}
+
+.intro-page p {
+  max-width: 600px;
+  text-align: left;
+  margin-bottom: 20px;
+}

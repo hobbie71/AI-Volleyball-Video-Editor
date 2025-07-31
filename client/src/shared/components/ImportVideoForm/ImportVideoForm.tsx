@@ -1,32 +1,34 @@
 import { useRef, useState, useEffect, useCallback } from "react";
-import { useVideo } from "../../contexts/video/VideoContext";
-import "./PrettyImportVideoFrom.css";
 
-interface Props {
-  setIsLoading: (isLoading: boolean) => void;
-}
+// Style import
+import "./ImportVideoFrom.css";
 
-const PrettyImportVideoForm = ({ setIsLoading }: Props) => {
-  const { uploadVideo } = useVideo();
+// Hook import
+import { useVideoUploader } from "../../VideoUpload/hooks/useVideoUploader";
+
+const ImportVideoForm = () => {
+  // Hooks
+  const { uploadVideo } = useVideoUploader();
+
+  // Refs
   const inputRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
+
+  // useStates
   const [isDraggingFile, setIsDraggingFile] = useState(false);
 
   const handleFiles = useCallback(
     async (files: FileList | File[]) => {
       const fileArray = Array.from(files);
       if (fileArray.length > 0) {
-        setIsLoading(true);
         try {
           await uploadVideo(fileArray);
         } catch (err) {
           console.error(err);
-        } finally {
-          setIsLoading(false);
         }
       }
     },
-    [uploadVideo, setIsLoading]
+    [uploadVideo]
   );
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,4 +94,4 @@ const PrettyImportVideoForm = ({ setIsLoading }: Props) => {
   );
 };
 
-export default PrettyImportVideoForm;
+export default ImportVideoForm;
