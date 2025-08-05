@@ -1,14 +1,14 @@
 import { useCallback } from "react";
 
 // Hook imports
-import { useCurrentTimelineVideo } from "../../VideoPlayer/hooks/useCurrentTimelineVideo";
+import { useCurrentTimelineVideo } from "../../../VideoPlayer/hooks/useCurrentTimelineVideo";
 
 // Lib imports
-import { getTimelineWhenTrim } from "../VideoTimeline/libs/getTimelineWhenTrim";
+import { getTimelineWhenTrim } from "../../libs/getTimelineWhenTrim";
 
 // Context imports
-import { useTimeline } from "../context/Timeline/useTimeline";
-import { useCurrentTime } from "../../VideoPlayer/context/CurrentTime/useCurrentTime";
+import { useTimeline } from "../../context/Timeline/useTimeline";
+import { useCurrentTime } from "../../../VideoPlayer/context/CurrentTime/useCurrentTime";
 
 export const useTrimVideo = () => {
   const { currentVideo } = useCurrentTimelineVideo();

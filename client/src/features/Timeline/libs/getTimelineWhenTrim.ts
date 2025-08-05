@@ -1,4 +1,4 @@
-import { TimelineVideo } from "../../../../types/video.types";
+import { TimelineVideo } from "../../../types/video.types";
 
 export const getTimelineWhenTrim = (
   video: TimelineVideo,

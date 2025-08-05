@@ -9,7 +9,7 @@ import {
 
 // Hook imports
 import { useVideoRendering } from "../context/VideoRendering/useVideoRendering";
-import { useTimeline } from "../../EditingBar/context/Timeline/useTimeline";
+import { useTimeline } from "../../Timeline/context/Timeline/useTimeline";
 import { TimelineVideo } from "../../../types/video.types";
 import { useCurrentTimelineVideo } from "./useCurrentTimelineVideo";
 
@@ -20,7 +20,7 @@ export const useVideoPlaybackControl = () => {
   const { videoRefs } = useVideoRendering();
   const { timelineVideos } = useTimeline();
   const { isVideoPlaying, setIsVideoPlaying } = useCurrentTime();
-  const { getCurrentVideoElement } = useCurrentTimelineVideo();
+  const { getCurrentVideoElement, currentVideo } = useCurrentTimelineVideo();
 
   const resetAllVideoElements = useCallback(() => {
     resetAllVideos(timelineVideos, videoRefs.current);
@@ -32,6 +32,12 @@ export const useVideoPlaybackControl = () => {
     },
     [videoRefs, timelineVideos]
   );
+
+  const resetAllVideoElementsExceptCurrentVideo = useCallback(() => {
+    if (!currentVideo) return;
+
+    resetAllVideosExceptVideo(timelineVideos, videoRefs.current, currentVideo);
+  }, [currentVideo, timelineVideos, videoRefs]);
 
   const playVideo = useCallback(() => {
     const currentVideoElement = getCurrentVideoElement();
@@ -55,6 +61,7 @@ export const useVideoPlaybackControl = () => {
   return {
     resetAllVideoElements,
     resetAllVideoElementsExcept,
+    resetAllVideoElementsExceptCurrentVideo,
     playVideo,
     pauseVideo,
     isVideoPlaying,

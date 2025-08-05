@@ -1,3 +1,6 @@
+// Stlye import
+import "./CurrentTimePointer.css";
+
 interface Props {
   containerWidth: number;
   currentTime: number;
@@ -15,6 +18,8 @@ const CurrentTimePointer = ({
 }: Props) => {
   const pixelPosition =
     (currentTime / zoomDuration) * containerWidth - scrollLeft;
+
+  // console.log(containerWidth);
 
   return (
     <div

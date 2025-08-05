@@ -8,7 +8,7 @@ import Canvas from "./components/Canvas";
 import VideoElement from "./components/VideoElement";
 
 // Context imports
-import { useTimeline } from "../EditingBar/context/Timeline/useTimeline";
+import { useTimeline } from "../Timeline/context/Timeline/useTimeline";
 
 // Hook imports
 import { useVideoPlaybackControl } from "./hooks/useVideoPlaybackControl";

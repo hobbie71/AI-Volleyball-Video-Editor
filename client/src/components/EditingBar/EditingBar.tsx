@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import "./EditingBar.css";
 import VideoTrack from "./VideoTrack";
 import TimeTrack from "./TimeTrack";
-import CurrentTimePointer from "./CurrentTimePointer";
+import CurrentTimePointer from "../../features/Timeline/components/CurrentTimePointer/CurrentTimePointer";
 import ZoomControls from "./ZoomControls";
 
 import { useCurrentTime } from "../../contexts/currentTime/CurrentTimeContext";
@@ -37,16 +37,6 @@ const EditingBar = () => {
     const hoverTime = getClickedTime(e.clientX);
     setHoverTime(hoverTime);
   };
-
-  // effect: update scroll left when scrolling
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => setScrollLeft(container.scrollLeft);
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();

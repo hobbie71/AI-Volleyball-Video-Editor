@@ -6,7 +6,7 @@ import { useCurrentTimelineVideo } from "../hooks/useCurrentTimelineVideo";
 import { useVideoPlaybackControl } from "../hooks/useVideoPlaybackControl";
 
 // Context imports
-import { useTimeline } from "../../EditingBar/context/Timeline/useTimeline";
+import { useTimeline } from "../../Timeline/context/Timeline/useTimeline";
 import { useCurrentTime } from "../context/CurrentTime/useCurrentTime";
 import { useVideoRendering } from "../context/VideoRendering/useVideoRendering";
 

@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 
 // Hook imports
-import { useCurrentTimelineVideo } from "../../VideoPlayer/hooks/useCurrentTimelineVideo";
-import { useVideoPlaybackControl } from "../../VideoPlayer/hooks/useVideoPlaybackControl";
+import { useCurrentTimelineVideo } from "../../../VideoPlayer/hooks/useCurrentTimelineVideo";
+import { useVideoPlaybackControl } from "../../../VideoPlayer/hooks/useVideoPlaybackControl";
 
 // Context import
-import { useTimeline } from "../context/Timeline/useTimeline";
-import { useCurrentTime } from "../../VideoPlayer/context/CurrentTime/useCurrentTime";
+import { useTimeline } from "../../context/Timeline/useTimeline";
+import { useCurrentTime } from "../../../VideoPlayer/context/CurrentTime/useCurrentTime";
 
 export const useJumpVideoBlocks = () => {
   const { currentVideo, currentVideoIndex } = useCurrentTimelineVideo();

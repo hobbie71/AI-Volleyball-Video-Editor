@@ -3,7 +3,7 @@ import { getCurrentTimelineVideoPlaying } from "../libs/getCurrentTimelineVideoP
 import { getVideoElement } from "../libs/getVideoElement";
 
 // Hook imports
-import { useTimeline } from "../../EditingBar/context/Timeline/useTimeline";
+import { useTimeline } from "../../Timeline/context/Timeline/useTimeline";
 import { useCurrentTime } from "../context/CurrentTime/useCurrentTime";
 
 // Context imports

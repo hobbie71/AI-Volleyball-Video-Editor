@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState, useRef, Dispatch, SetStateAction } from "react";
 import { createContext } from "react";
 import { TimelineVideo } from "../../../../types/video.types";
 
 type TimelineContextType = {
+  timelineContainerRef: React.RefObject<HTMLDivElement | null>;
   timelineDuration: number;
-  setTimelineDuration: React.Dispatch<React.SetStateAction<number>>;
+  setTimelineDuration: Dispatch<SetStateAction<number>>;
   timelineVideos: TimelineVideo[];
-  setTimelineVideos: React.Dispatch<React.SetStateAction<TimelineVideo[]>>;
+  setTimelineVideos: Dispatch<SetStateAction<TimelineVideo[]>>;
+  timelineContainerWidth: number;
+  setTimelineContainerWidth: Dispatch<SetStateAction<number>>;
 };
 
 const TimelineContext = createContext<undefined | TimelineContextType>(
@@ -18,16 +21,23 @@ export const TimelineProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const timelineContainerRef = useRef<HTMLDivElement>(null);
+
   const [timelineDuration, setTimelineDuration] = useState(0);
   const [timelineVideos, setTimelineVideos] = useState<TimelineVideo[]>([]);
+  const [timelineContainerWidth, setTimelineContainerWidth] =
+    useState<number>(0);
 
   return (
     <TimelineContext.Provider
       value={{
+        timelineContainerRef,
         timelineDuration,
         setTimelineDuration,
         timelineVideos,
         setTimelineVideos,
+        timelineContainerWidth,
+        setTimelineContainerWidth,
       }}>
       {children}
     </TimelineContext.Provider>

@@ -1,0 +1,22 @@
+.current-pointer-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.top-arrow {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-radius: 5px;
+  transform: translateX(-50%);
+}
+
+.bar {
+  width: 3px;
+  border-radius: 3px;
+  transform: translateX(-50%);
+}

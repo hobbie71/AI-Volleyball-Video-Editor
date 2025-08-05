@@ -2,14 +2,14 @@ import { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 // Context imports
-import { useCurrentTime } from "../../VideoPlayer/context/CurrentTime/useCurrentTime";
-import { useTimeline } from "../context/Timeline/useTimeline";
+import { useCurrentTime } from "../../../VideoPlayer/context/CurrentTime/useCurrentTime";
+import { useTimeline } from "../../context/Timeline/useTimeline";
 
 // Hook imports
-import { useCurrentTimelineVideo } from "../../VideoPlayer/hooks/useCurrentTimelineVideo";
+import { useCurrentTimelineVideo } from "../../../VideoPlayer/hooks/useCurrentTimelineVideo";
 
 // Type imports
-import { TimelineVideo } from "../../../types/video.types";
+import { TimelineVideo } from "../../../../types/video.types";
 
 export const useSplitVideo = () => {
   const { currentTimeRef } = useCurrentTime();

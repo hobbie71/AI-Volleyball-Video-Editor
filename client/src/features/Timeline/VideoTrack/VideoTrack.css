@@ -1,0 +1,8 @@
+.video-track {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 80px;
+  margin-bottom: 8px;
+}

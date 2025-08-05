@@ -1,4 +1,4 @@
-import { TimelineVideo } from "../../../../types/video.types";
+import { TimelineVideo } from "../../../types/video.types";
 
 export const getTimelineWhenMoved = (timelineVideos: TimelineVideo[]) => {
   timelineVideos.forEach((video, index) => {
