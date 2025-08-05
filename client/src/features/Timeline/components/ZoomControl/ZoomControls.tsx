@@ -3,6 +3,9 @@ import { useEffect, useRef } from "react";
 // Lib imports
 import { getTimelineClickedTime } from "../../libs/getTimelineClickedTime";
 
+// Context imports
+import { useTimelineZoom } from "../../context/TimelineZoom/useTimelineZoom";
+
 interface Props {
   children: React.ReactNode;
   timelineDuration: number;
@@ -20,6 +23,10 @@ const ZoomControls = ({
   scrollLeft,
   setTimelineScrollLeft,
 }: Props) => {
+  // Hooks
+  const { setScrollLeft } = useTimelineZoom();
+
+  // Refs
   const zoomControlRef = useRef<HTMLDivElement>(null);
   const zoomDurationRef = useRef(zoomDuration); // Create a ref for zoomDuration
 
@@ -79,6 +86,16 @@ const ZoomControls = ({
     scrollLeft,
   ]);
 
+  // effect: update scroll left when scrolling
+  useEffect(() => {
+    const zoomControl = zoomControlRef.current;
+    if (!zoomControl) return;
+
+    const handleScroll = () => setScrollLeft(zoomControl.scrollLeft);
+    zoomControl.addEventListener("scroll", handleScroll);
+    return () => zoomControl.removeEventListener("scroll", handleScroll);
+  }, [zoomControlRef, setScrollLeft]);
+
   return (
     <div
       ref={zoomControlRef}
@@ -86,6 +103,7 @@ const ZoomControls = ({
       style={{
         width: "100%",
         position: "relative",
+        overflowX: "auto",
       }}>
       {children}
     </div>

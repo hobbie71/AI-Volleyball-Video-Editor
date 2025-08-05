@@ -7,6 +7,7 @@ import "./Timeline.css";
 import VideoTrack from "./VideoTrack/VideoTrack";
 import CurrentTimePointer from "./components/CurrentTimePointer/CurrentTimePointer";
 import ZoomControls from "./components/ZoomControl/ZoomControls";
+import TimeTrack from "./components/TimeTrack/TimeTrack";
 
 // Context imports
 import { useCurrentTime } from "../VideoPlayer/context/CurrentTime/useCurrentTime";
@@ -86,6 +87,11 @@ const Timeline = () => {
       onMouseLeave={() => setShowHoverPointer(false)}>
       <CurrentTimePointer
         currentTime={currentTime}
+        containerWidth={timelineContainerWidth}
+        zoomDuration={zoomDuration}
+        scrollLeft={scrollLeft}
+      />
+      <TimeTrack
         containerWidth={timelineContainerWidth}
         zoomDuration={zoomDuration}
         scrollLeft={scrollLeft}
