@@ -19,6 +19,7 @@ import { useDrawFrame } from "../VideoPlayer/hooks/useDrawFrame";
 import { useVideoPlaybackControl } from "../VideoPlayer/hooks/useVideoPlaybackControl";
 import { useTimelineControl } from "./hooks/useTimelineControl";
 import { useClickedTime } from "./hooks/useClickedTime";
+import { useVideoTimeline } from "./hooks/useVideoTimeline";
 
 const Timeline = () => {
   // Hooks
@@ -34,6 +35,7 @@ const Timeline = () => {
   const { scrollLeft, setZoomDuration, zoomDuration } = useTimelineZoom();
   const { setTimelineScrollLeft } = useTimelineControl();
   const { getCurrentClickedTime } = useClickedTime();
+  const { addVideoToTimeline } = useVideoTimeline();
 
   // useState
   const [hoverTime, setHoverTime] = useState<number>(0);
@@ -57,6 +59,26 @@ const Timeline = () => {
 
     const hoverTime = getCurrentClickedTime(e.clientX);
     setHoverTime(hoverTime);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    const mediaType = e.dataTransfer.getData("mediaType");
+    if (mediaType === "video") {
+      const videoData = e.dataTransfer.getData("application/json");
+      try {
+        const video = JSON.parse(videoData);
+        addVideoToTimeline(video);
+      } catch (error) {
+        console.error("Failed to parse video data:", error);
+      }
+    }
   };
 
   // effect: Update container width when size and width changes
@@ -84,7 +106,9 @@ const Timeline = () => {
       onClick={handleCurrentTimeChange}
       onMouseMove={setHoverPointer}
       onMouseEnter={setHoverPointer}
-      onMouseLeave={() => setShowHoverPointer(false)}>
+      onMouseLeave={() => setShowHoverPointer(false)}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}>
       <CurrentTimePointer
         currentTime={currentTime}
         containerWidth={timelineContainerWidth}

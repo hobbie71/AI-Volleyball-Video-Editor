@@ -1,16 +1,15 @@
 .video-player {
-  width: 100%;
+  max-width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
 }
 
 .canvas {
-  height: auto;
-  width: auto;
+  max-height: auto;
+  max-width: 100%;
 }
 
 .video-element {
-  width: 100%;
   visibility: hidden;
 }

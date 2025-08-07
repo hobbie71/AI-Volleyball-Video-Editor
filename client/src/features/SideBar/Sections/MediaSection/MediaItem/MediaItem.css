@@ -1,0 +1,109 @@
+.media-item {
+  background-color: white;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  cursor: grab;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+/* Only show hover effects for video files (media items) */
+.media-item[data-file-type="video"]:hover,
+.media-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: #f8f9fa;
+  border-color: #007acc;
+  transform: translateY(-2px);
+}
+
+.media-item:active {
+  cursor: grabbing;
+  transform: translateY(0);
+}
+
+.media-item.is-dragging {
+  opacity: 0.6;
+  cursor: grabbing;
+  transform: rotate(5deg);
+  z-index: 1000;
+}
+
+.media-item-thumbnail {
+  max-width: 100%;
+  user-select: none;
+  border-radius: 5px;
+  pointer-events: none;
+  transition: filter 0.2s ease;
+}
+
+.media-item:hover .media-item-thumbnail {
+  filter: brightness(1.1);
+}
+
+.media-item-name {
+  margin: 0px;
+  color: black;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.media-item:hover .media-item-name {
+  color: #007acc;
+}
+
+/* Video indicator */
+.media-item::after {
+  content: "🎥";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.media-item:hover::after {
+  opacity: 1;
+}
+
+/* Timeline drop target highlighting */
+.timeline.media-drop-target {
+  background-color: rgba(0, 122, 204, 0.1);
+  border: 2px dashed #007acc;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.timeline.media-drop-target::before {
+  content: "Drop video here to add to timeline";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 122, 204, 0.9);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 100;
+  pointer-events: none;
+}
