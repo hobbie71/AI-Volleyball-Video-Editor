@@ -5,11 +5,33 @@ export type MotionEffects = {
   rotation: number;
 };
 
+export type Resolution =
+  | "3840x2160"
+  | "2560x1440"
+  | "1920x1080"
+  | "1280x720"
+  | "854x480";
+
+export type Format = "mp4" | "webm" | "mov";
+export type Bitrate =
+  | "1000k"
+  | "1500k"
+  | "2500k"
+  | "3500k"
+  | "4500k"
+  | "6000k"
+  | "10000k"
+  | "16000k"
+  | "35000k"
+  | "45000k";
+
+export type Framerate = "24" | "30" | "60";
+
 export type ExportSettings = {
-  resolution: string;
-  format: string;
-  bitrate: string;
-  framerate: string;
+  resolution: Resolution;
+  format: Format;
+  bitrate: Bitrate;
+  framerate: Framerate;
 };
 
 export type Video = {

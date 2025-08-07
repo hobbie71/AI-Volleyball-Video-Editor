@@ -1,15 +1,22 @@
 import { useState, useRef, useEffect } from "react";
-import { useVideoEditing } from "../../../../contexts/videoEditing/VideoEditingContext";
-import { useVideo } from "../../../../contexts/video/VideoContext";
+
+// Style import
 import "./EditSection.css";
+
+// Hook imports
+import { useMotionEffects } from "../../hooks/useMotionEffects";
+import { useExport } from "../../hooks/useExport";
+import { useVideoEditing } from "../../../Timeline/context/VideoEditing/useVideoEditing";
 
 const DRAG_THRESHOLD = 3; // pixels
 
 const EditSection = () => {
-  const { currentVideoSelected, updateCurrentVideoMotionEffects } =
-    useVideoEditing();
+  // Hooks
+  const { setSelectedVideoMotionEffects } = useMotionEffects();
+  const { videoSelected: currentVideoSelected } = useVideoEditing();
+  const { getExportSettings } = useExport();
 
-  const { exportSettings } = useVideo();
+  const exportSettings = getExportSettings();
   const [resWidth, resHeight] = exportSettings.resolution
     .split("x")
     .map(Number);
@@ -37,7 +44,6 @@ const EditSection = () => {
   const dragStartedY = useRef<boolean>(false);
 
   // Scale States
-  const [minScale, setMinScale] = useState<number>(1);
   const [scale, setScale] = useState(
     currentVideoSelected?.motionEffects?.scale || 1
   );
@@ -182,13 +188,22 @@ const EditSection = () => {
   }, [isChangingY]);
 
   useEffect(() => {
-    updateCurrentVideoMotionEffects({
-      x: positionX,
-      y: positionY,
-      scale: scale,
-      rotation: rotation,
-    });
-  }, [positionX, positionY, scale, rotation, updateCurrentVideoMotionEffects]);
+    if (currentVideoSelected) {
+      setSelectedVideoMotionEffects({
+        x: positionX,
+        y: positionY,
+        scale: scale,
+        rotation: rotation,
+      });
+    }
+  }, [
+    positionX,
+    positionY,
+    scale,
+    rotation,
+    currentVideoSelected,
+    setSelectedVideoMotionEffects,
+  ]);
 
   // Update minScale
   useEffect(() => {
@@ -196,9 +211,8 @@ const EditSection = () => {
       1,
       getSafeScale(rotation, resWidth, resHeight)
     );
-    setMinScale(newMinScale);
 
-    setScale((prevScale) =>
+    setScale((prevScale: number) =>
       newMinScale > prevScale ? newMinScale : prevScale
     );
   }, [rotation, resWidth, resHeight]);
@@ -295,7 +309,7 @@ const EditSection = () => {
         Scale (Zoom)
         <input
           type="range"
-          value={minScale}
+          value={scale}
           min={getSafeScale(rotation, resWidth, resHeight)}
           max={10}
           step={0.01}

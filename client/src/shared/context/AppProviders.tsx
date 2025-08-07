@@ -4,6 +4,8 @@ import { VideoUploadProvider } from "../VideoUpload/context/VideoUpload/VideoLib
 import { VideoRenderingProvider } from "../../features/VideoPlayer/context/VideoRendering/VideoRenderingContext";
 import { CurrentTimeProvider } from "../../features/VideoPlayer/context/CurrentTime/CurrentTimeContext";
 import { TimelineZoomProvider } from "../../features/Timeline/context/TimelineZoom/TimelineZoomContext";
+import { ExportSettingsProvider } from "../../features/SideBar/context/ExportSettingsContext";
+import { VideoEditingProvider } from "../../features/Timeline/context/VideoEditing/VideoEditingContext";
 
 interface Props {
   children: React.ReactNode;
@@ -11,17 +13,21 @@ interface Props {
 
 const AppProviders = ({ children }: Props) => {
   return (
-    <VideoLibraryProvider>
-      <TimelineProvider>
-        <VideoUploadProvider>
-          <VideoRenderingProvider>
-            <CurrentTimeProvider>
-              <TimelineZoomProvider>{children}</TimelineZoomProvider>
-            </CurrentTimeProvider>
-          </VideoRenderingProvider>
-        </VideoUploadProvider>
-      </TimelineProvider>
-    </VideoLibraryProvider>
+    <ExportSettingsProvider>
+      <VideoLibraryProvider>
+        <TimelineProvider>
+          <VideoUploadProvider>
+            <VideoRenderingProvider>
+              <CurrentTimeProvider>
+                <VideoEditingProvider>
+                  <TimelineZoomProvider>{children}</TimelineZoomProvider>
+                </VideoEditingProvider>
+              </CurrentTimeProvider>
+            </VideoRenderingProvider>
+          </VideoUploadProvider>
+        </TimelineProvider>
+      </VideoLibraryProvider>
+    </ExportSettingsProvider>
   );
 };
 

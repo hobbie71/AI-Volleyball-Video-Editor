@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
-import { Upload } from "../../../../contexts/video/types";
+
+// Type imports
+import { Video } from "../../../../types/video.types";
 
 interface Props {
-  upload: Upload;
+  video: Video;
 }
 
-const MediaItem = ({ upload }: Props) => {
+const MediaItem = ({ video }: Props) => {
   const [thumbnail, setThumbnail] = useState<string | undefined>(undefined);
 
   // useEffect: Generate thumbnail
   useEffect(() => {
     const videoElement = document.createElement("video");
-    videoElement.src = upload.url;
+    videoElement.src = video.url;
     videoElement.preload = "auto";
     videoElement.crossOrigin = "anonymous";
 
@@ -29,14 +31,14 @@ const MediaItem = ({ upload }: Props) => {
         setThumbnail(canvas.toDataURL("image/png"));
       }
     };
-  }, [upload]);
+  }, [video]);
 
   return (
     <div
       draggable
       className="media-item"
       onDragStart={(e) =>
-        e.dataTransfer.setData("application/json", JSON.stringify(upload))
+        e.dataTransfer.setData("application/json", JSON.stringify(video))
       }
       style={{
         backgroundColor: "white",
@@ -66,7 +68,7 @@ const MediaItem = ({ upload }: Props) => {
           maxWidth: "100%",
           overflow: "hidden",
         }}>
-        {upload.fileName}
+        {video.fileName}
       </p>
     </div>
   );

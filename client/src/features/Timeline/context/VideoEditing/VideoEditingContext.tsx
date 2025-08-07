@@ -1,9 +1,9 @@
 import { createContext, useState } from "react";
-import { Video } from "../../../../types/video.types";
+import { TimelineVideo } from "../../../../types/video.types";
 
 type VideoEditingContextType = {
-  videoSelected: Video | null;
-  setVideoSelected: (video: Video) => void;
+  videoSelected: TimelineVideo | null;
+  setVideoSelected: (video: TimelineVideo) => void;
 };
 
 const VideoEditingContext = createContext<undefined | VideoEditingContextType>(
@@ -15,7 +15,9 @@ export const VideoEditingProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [videoSelected, setVideoSelected] = useState<Video | null>(null);
+  const [videoSelected, setVideoSelected] = useState<TimelineVideo | null>(
+    null
+  );
 
   return (
     <VideoEditingContext.Provider value={{ videoSelected, setVideoSelected }}>

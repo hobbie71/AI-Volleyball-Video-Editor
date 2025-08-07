@@ -1,15 +1,31 @@
 import { useCallback } from "react";
-import { MotionEffects } from "../../../types/video.types";
 
-// This hook will handle motion effects (position, scale, rotation) for video editing
-// It should be implemented based on your SideBar motion controls UI
+import { useVideoEditing } from "../../Timeline/context/VideoEditing/useVideoEditing";
+
+// Type imports
+import { MotionEffects, TimelineVideo } from "../../../types/video.types";
+
 export const useMotionEffects = () => {
-  const updateMotionEffects = useCallback((effects: MotionEffects) => {
-    // TODO: Implement motion effects update logic
-    console.log("Updating motion effects:", effects);
-  }, []);
+  const { videoSelected } = useVideoEditing();
+
+  const setSelectedVideoMotionEffects = useCallback(
+    (motionEffects: MotionEffects) => {
+      if (!videoSelected) return;
+
+      videoSelected.motionEffects = motionEffects;
+    },
+    [videoSelected]
+  );
+
+  const setVideoMotionEffect = useCallback(
+    (timelineVideo: TimelineVideo, motionEffects: MotionEffects) => {
+      timelineVideo.motionEffects = motionEffects;
+    },
+    []
+  );
 
   return {
-    updateMotionEffects,
+    setSelectedVideoMotionEffects,
+    setVideoMotionEffect,
   };
 };
