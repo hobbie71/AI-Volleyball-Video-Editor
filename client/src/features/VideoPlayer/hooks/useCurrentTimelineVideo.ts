@@ -1,3 +1,5 @@
+import { useCallback, useMemo } from "react";
+
 // Lib imports
 import { getCurrentTimelineVideoPlaying } from "../libs/getCurrentTimelineVideoPlaying";
 import { getVideoElement } from "../libs/getVideoElement";
@@ -10,19 +12,41 @@ import { useCurrentTime } from "../context/CurrentTime/useCurrentTime";
 import { useVideoRendering } from "../context/VideoRendering/useVideoRendering";
 
 export const useCurrentTimelineVideo = () => {
-  const { currentTimeRef } = useCurrentTime();
+  const { currentTime } = useCurrentTime();
   const { timelineVideos } = useTimeline();
   const { videoRefs } = useVideoRendering();
 
-  const { currentVideo, index } = getCurrentTimelineVideoPlaying(
-    currentTimeRef.current,
-    timelineVideos
+  // Derive current video/index from state so it updates on render
+  const { currentVideo, index } = useMemo(
+    () => getCurrentTimelineVideoPlaying(currentTime, timelineVideos),
+    [currentTime, timelineVideos]
   );
 
-  const getCurrentVideoElement = () => {
-    if (!currentVideo) return;
+  const getCurrentVideoElement = useCallback(() => {
+    if (!currentVideo) return null;
     return getVideoElement(currentVideo.id, videoRefs.current);
-  };
+  }, [currentVideo, videoRefs]);
 
-  return { currentVideo, currentVideoIndex: index, getCurrentVideoElement };
+  // Synchronous helpers when you have a specific time (avoid waiting for re-render)
+  const getCurrentTimelineVideoAt = useCallback(
+    (timeSeconds: number) =>
+      getCurrentTimelineVideoPlaying(timeSeconds, timelineVideos).currentVideo,
+    [timelineVideos]
+  );
+
+  const getCurrentVideoElementAt = useCallback(
+    (timeSeconds: number) => {
+      const v = getCurrentTimelineVideoAt(timeSeconds);
+      return v ? getVideoElement(v.id, videoRefs.current) : null;
+    },
+    [getCurrentTimelineVideoAt, videoRefs]
+  );
+
+  return {
+    currentVideo,
+    currentVideoIndex: index,
+    getCurrentVideoElement,
+    getCurrentTimelineVideoAt,
+    getCurrentVideoElementAt,
+  };
 };

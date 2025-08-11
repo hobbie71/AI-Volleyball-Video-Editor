@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 // Context imports
 import { useVideoRendering } from "../context/VideoRendering/useVideoRendering";
+import { useCurrentTime } from "../context/CurrentTime/useCurrentTime";
 
 // Hook imports
 import { useCurrentTimelineVideo } from "./useCurrentTimelineVideo";
@@ -11,27 +12,34 @@ import { drawVideoFrame } from "../libs/drawVideoFrame";
 
 export const useDrawFrame = () => {
   const { canvasRef, videoRefs } = useVideoRendering();
-  const { currentVideo } = useCurrentTimelineVideo();
+  const { getCurrentTimelineVideoAt } = useCurrentTimelineVideo();
+  const { currentTimeRef } = useCurrentTime();
 
   const drawFrameAtCurrentTime = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !currentVideo) return;
+    if (!canvas) return;
+
+    const currentVideo = getCurrentTimelineVideoAt(currentTimeRef.current);
+    if (!currentVideo) return;
 
     const videoElement = videoRefs.current[currentVideo.id];
-    if (!videoElement) return;
 
     drawVideoFrame(canvas, videoElement, currentVideo.motionEffects);
-  }, [canvasRef, videoRefs, currentVideo]);
+  }, [canvasRef, videoRefs, currentTimeRef, getCurrentTimelineVideoAt]);
 
   const drawFrameAtTime = useCallback(
     async (timelineTime: number) => {
       const canvas = canvasRef.current;
-      if (!canvas || !currentVideo) return;
+      if (!canvas) return;
+
+      const currentVideo = getCurrentTimelineVideoAt(timelineTime);
+      if (!currentVideo) return;
+
+      const videoElement = videoRefs.current[currentVideo.id];
+      if (!videoElement) return;
 
       const timeInVideo =
         timelineTime - currentVideo.timelineStartTime + currentVideo.startTime;
-
-      const videoElement = videoRefs.current[currentVideo.id];
 
       await new Promise<void>((resolve) => {
         const onSeeked = () => {
@@ -44,7 +52,7 @@ export const useDrawFrame = () => {
 
       drawVideoFrame(canvas, videoElement, currentVideo.motionEffects);
     },
-    [canvasRef, videoRefs, currentVideo]
+    [canvasRef, videoRefs, getCurrentTimelineVideoAt]
   );
 
   return { drawFrameAtCurrentTime, drawFrameAtTime };

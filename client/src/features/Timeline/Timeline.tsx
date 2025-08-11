@@ -15,25 +15,21 @@ import { useTimeline } from "./context/Timeline/useTimeline";
 import { useTimelineZoom } from "./context/TimelineZoom/useTimelineZoom";
 
 // Hook imports
-import { useDrawFrame } from "../VideoPlayer/hooks/useDrawFrame";
-import { useVideoPlaybackControl } from "../VideoPlayer/hooks/useVideoPlaybackControl";
 import { useTimelineControl } from "./hooks/useTimelineControl";
 import { useClickedTime } from "./hooks/useClickedTime";
 import { useVideoTimeline } from "./hooks/useVideoTimeline";
 
 const Timeline = () => {
   // Hooks
-  const { currentTime, updateCurrentTime } = useCurrentTime();
+  const { currentTime } = useCurrentTime();
   const {
     timelineContainerRef,
     timelineDuration,
     timelineContainerWidth,
     setTimelineContainerWidth,
   } = useTimeline();
-  const { drawFrameAtTime } = useDrawFrame();
-  const { resetAllVideoElementsExceptCurrentVideo } = useVideoPlaybackControl();
   const { scrollLeft, setZoomDuration, zoomDuration } = useTimelineZoom();
-  const { setTimelineScrollLeft } = useTimelineControl();
+  const { setTimelineScrollLeft, setTimelineTime } = useTimelineControl();
   const { getCurrentClickedTime } = useClickedTime();
   const { addVideoToTimeline } = useVideoTimeline();
 
@@ -46,9 +42,7 @@ const Timeline = () => {
     if (!timelineContainer) return;
 
     const newTime = getCurrentClickedTime(e.clientX);
-    updateCurrentTime(newTime);
-    resetAllVideoElementsExceptCurrentVideo();
-    drawFrameAtTime(newTime);
+    setTimelineTime(newTime);
   };
 
   const setHoverPointer = (e: React.MouseEvent<HTMLDivElement>) => {

@@ -37,6 +37,8 @@ const Canvas = ({ children, width, height }: Props) => {
       const currentVideoElement = getCurrentVideoElement();
       if (!currentVideoElement) return;
 
+      if (currentVideoElement.paused) currentVideoElement.play();
+
       const newTime =
         currentVideoElement.currentTime +
         currentVideo.timelineStartTime -
