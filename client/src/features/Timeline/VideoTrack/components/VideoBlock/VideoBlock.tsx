@@ -12,6 +12,9 @@ import { useTrimVideo } from "../../hooks/useTrimVideo";
 import { useDrawFrame } from "../../../../VideoPlayer/hooks/useDrawFrame";
 import { useMoveVideo } from "../../hooks/useMoveVideo";
 
+// Context imports
+import { useVideoEditing } from "../../../context/VideoEditing/useVideoEditing";
+
 // Util imports
 import { clamp } from "../../utils/clamp";
 
@@ -39,6 +42,7 @@ const VideoBlock = ({
   const { trimLeftSide, trimRightSide } = useTrimVideo();
   const { drawFrameAtTime } = useDrawFrame();
   const { moveVideoToIndex } = useMoveVideo();
+  const { setVideoSelected, videoSelected } = useVideoEditing();
 
   // Refs
   const containerRef = useRef<HTMLDivElement>(null);
@@ -275,24 +279,29 @@ const VideoBlock = ({
       const container = containerRef.current;
       if (!container) return;
 
-      // Do nothing if button is clicked
-      if (e.target instanceof HTMLButtonElement) return;
-
-      // Deselect if click is outside the video block or on a trim bar of another video
+      // Return if click is outside the video block or on a trim bar of another video
       const isClickInsideVideoBlock = container.contains(e.target as Node);
       const trimBar = (e.target as HTMLElement).closest(".trim-bar");
       const isTrimBarOfThisVideo =
         trimBar && trimBar.getAttribute("data-video-ID") === video.id;
 
-      if (!isClickInsideVideoBlock || (trimBar && !isTrimBarOfThisVideo)) {
-        setIsSelected(false);
+      if (!isClickInsideVideoBlock || (trimBar && !isTrimBarOfThisVideo))
         return;
-      }
 
-      setIsSelected(true);
+      setVideoSelected(video);
     },
-    [video.id]
+    [video, setVideoSelected]
   );
+
+  useEffect(() => {
+    if (!videoSelected) return;
+
+    if (videoSelected.id === video.id) {
+      setIsSelected(true);
+    } else {
+      setIsSelected(false);
+    }
+  }, [videoSelected, video.id]);
 
   // Effect: switches setIsSelected if user clicks on video block
   useEffect(() => {
@@ -314,9 +323,7 @@ const VideoBlock = ({
 
   return (
     <div
-      className={`video-block-container ${
-        isSelected ? "is-selected" : ""
-      } ${isDraggingVideo ? "is-dragging" : ""}`}
+      className={`video-block-container ${isSelected ? "is-selected" : ""} ${isDraggingVideo ? "is-dragging" : ""}`}
       draggable
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}

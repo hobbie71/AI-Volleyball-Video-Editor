@@ -19,8 +19,6 @@ const CurrentTimePointer = ({
   const pixelPosition =
     (currentTime / zoomDuration) * containerWidth - scrollLeft;
 
-  // console.log(containerWidth);
-
   return (
     <div
       className="current-pointer-container"

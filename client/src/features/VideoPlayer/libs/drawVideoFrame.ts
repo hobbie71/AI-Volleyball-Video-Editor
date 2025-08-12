@@ -10,27 +10,20 @@ export const drawVideoFrame = (
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  if (motionEffects) {
-    const { x, y, scale, rotation } = motionEffects;
-    const angleRad = (rotation * Math.PI) / 180;
-    const vidWidth = videoElement.videoWidth;
-    const vidHeight = videoElement.videoHeight;
-    const centerX = vidWidth / 2;
-    const centerY = vidHeight / 2;
-
-    ctx.save();
-    ctx.translate(centerX + x, centerY + y);
-    ctx.rotate(angleRad);
-    ctx.scale(scale, scale);
-    ctx.drawImage(
-      videoElement,
-      -vidWidth / 2,
-      -vidHeight / 2,
-      vidWidth,
-      vidHeight
-    );
-    ctx.restore();
-  } else {
+  if (!motionEffects) {
     ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+    return;
   }
+
+  const { x, y, scale, rotation } = motionEffects;
+  const angleRad = (rotation * Math.PI) / 180;
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+
+  ctx.save();
+  ctx.translate(centerX + x, centerY + y);
+  ctx.rotate(angleRad);
+  ctx.scale(scale, scale);
+  ctx.drawImage(videoElement, -centerX, -centerY, canvas.width, canvas.height);
+  ctx.restore();
 };
