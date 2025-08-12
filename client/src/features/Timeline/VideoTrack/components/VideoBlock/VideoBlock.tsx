@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
 // Style import
-import "./VideoBlock.css";
+import "./VideoBlock.scss";
 
 // Type imports
 import { TimelineVideo } from "../../../../../types/video.types";
@@ -11,6 +11,9 @@ import { useClickedTime } from "../../../hooks/useClickedTime";
 import { useTrimVideo } from "../../hooks/useTrimVideo";
 import { useDrawFrame } from "../../../../VideoPlayer/hooks/useDrawFrame";
 import { useMoveVideo } from "../../hooks/useMoveVideo";
+
+// Util imports
+import { clamp } from "../../utils/clamp";
 
 // Component imports
 import TrimBar from "../TrimBar/TrimBar";
@@ -39,6 +42,7 @@ const VideoBlock = ({
 
   // Refs
   const containerRef = useRef<HTMLDivElement>(null);
+  const lastDrawTimeRef = useRef<number>(0);
 
   // useStates
   const [trimSideDragging, setTrimSideDragging] = useState<-1 | null | 1>(null);
@@ -98,78 +102,81 @@ const VideoBlock = ({
     video.timelineStartTime,
   ]);
 
-  // useEffect: handles moving of trim bars
-  useEffect(() => {
-    if (!isMovingTrimBar) return;
-
-    let newTime: number;
-
-    setShowTrimBars(true);
-    setShowHoverPointer(false);
-
-    const handleGlobalMouseMove = (e: MouseEvent) => {
+  // Mouse move handler for trim bar
+  const handleTrimBarMouseMove = useCallback(
+    (e: MouseEvent) => {
       const container = containerRef.current;
-      if (!container)
-        throw new Error("No containerRef. Can't handleGlobalMouseMove");
+      if (!container) return;
 
-      newTime = getCurrentClickedTime(e.clientX);
+      let newTime = getCurrentClickedTime(e.clientX);
 
       if (trimSideDragging === 1) {
         // dragging right side trim bar
-
         const maxTime =
           video.timelineStartTime - video.startTime + video.duration;
         const minTime = video.timelineStartTime;
-        newTime = Math.max(Math.min(maxTime, newTime), minTime);
-
+        newTime = clamp(newTime, minTime, maxTime);
         setVisualEndTime(newTime);
       } else {
         // dragging left side trim bar
-
         const maxTime = video.timelineEndTime;
         const minTime = video.timelineStartTime - video.startTime;
-        newTime = Math.max(Math.min(maxTime, newTime), minTime);
-
+        newTime = clamp(newTime, minTime, maxTime);
         setVisualStartTime(newTime);
       }
 
-      let now = performance.now();
-
-      if (now > 300) {
-        // 200ms throttle
+      // Throttle drawFrameAtTime to every 300ms
+      const now = performance.now();
+      if (now - lastDrawTimeRef.current > 300) {
         drawFrameAtTime(newTime);
-        now = 0;
+        lastDrawTimeRef.current = now;
       }
-    };
+    },
+    [
+      getCurrentClickedTime,
+      trimSideDragging,
+      video.timelineStartTime,
+      video.startTime,
+      video.duration,
+      video.timelineEndTime,
+      drawFrameAtTime,
+    ]
+  );
 
-    const trimVideoOnMouseRelease = () => {
-      if (trimSideDragging === -1) trimLeftSide();
-      else trimRightSide();
-
-      setIsMovingTrimBar(false);
-      setTrimSideDragging(null);
-    };
-
-    window.addEventListener("mousemove", handleGlobalMouseMove);
-    window.addEventListener("mouseup", trimVideoOnMouseRelease);
-
-    return () => {
-      window.removeEventListener("mousemove", handleGlobalMouseMove);
-      window.removeEventListener("mouseup", trimVideoOnMouseRelease);
-    };
+  // Mouse up handler for trim bar
+  const handleTrimBarMouseUp = useCallback(() => {
+    if (trimSideDragging === -1) trimLeftSide(visualStartTime);
+    else trimRightSide(visualEndTime);
+    setIsMovingTrimBar(false);
+    setTrimSideDragging(null);
   }, [
-    drawFrameAtTime,
-    getCurrentClickedTime,
-    isMovingTrimBar,
-    setShowHoverPointer,
+    trimSideDragging,
     trimLeftSide,
     trimRightSide,
-    trimSideDragging,
-    video.duration,
-    video.startTime,
-    video.timelineEndTime,
-    video.timelineStartTime,
+    visualStartTime,
+    visualEndTime,
   ]);
+
+  // Effect: Set UI state when starting trim
+  useEffect(() => {
+    if (isMovingTrimBar) {
+      setShowTrimBars(true);
+      setShowHoverPointer(false);
+    }
+  }, [isMovingTrimBar, setShowHoverPointer]);
+
+  // Effect: Attach/detach mouse listeners when moving trim bar
+  useEffect(() => {
+    if (!isMovingTrimBar) return;
+
+    window.addEventListener("mousemove", handleTrimBarMouseMove);
+    window.addEventListener("mouseup", handleTrimBarMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleTrimBarMouseMove);
+      window.removeEventListener("mouseup", handleTrimBarMouseUp);
+    };
+  }, [isMovingTrimBar, handleTrimBarMouseMove, handleTrimBarMouseUp]);
 
   const moveTrimBar = (
     e: React.MouseEvent<HTMLDivElement>,
@@ -181,49 +188,52 @@ const VideoBlock = ({
     setTrimSideDragging(trimBarNumber);
   };
 
-  // Keeps cursor as arrows when moving trim bars
+  // Effect: Manage cursor styles for interactions
   useEffect(() => {
     if (isMovingTrimBar) {
       document.body.style.cursor = "ew-resize";
       document.body.style.userSelect = "none";
-    }
-
-    return () => {
-      document.body.style.cursor = "";
-    };
-  }, [isMovingTrimBar]);
-
-  // Keeps cursor as grabbing when dragging video
-  useEffect(() => {
-    if (isDraggingVideo) {
+    } else if (isDraggingVideo) {
       document.body.style.cursor = "grabbing";
       document.body.style.userSelect = "none";
+    } else {
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
     }
 
     return () => {
       document.body.style.cursor = "";
+      document.body.style.userSelect = "";
     };
-  }, [isDraggingVideo]);
+  }, [isMovingTrimBar, isDraggingVideo]);
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    setIsDraggingVideo(true);
+  // Drag handlers
+  const handleDragStart = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      setIsDraggingVideo(true);
+      e.dataTransfer.setData("videoIndex", index.toString());
+    },
+    [index]
+  );
 
-    e.dataTransfer.setData("videoIndex", index.toString());
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
-  };
+  }, []);
 
-  const handleDragDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      setIsDraggingVideo(false);
+      const fromIndex = parseInt(e.dataTransfer.getData("videoIndex"));
+      if (fromIndex === index) return;
+      moveVideoToIndex(fromIndex, index);
+    },
+    [index, moveVideoToIndex]
+  );
+
+  const handleDragEnd = useCallback(() => {
     setIsDraggingVideo(false);
-
-    const fromIndex = parseInt(e.dataTransfer.getData("videoIndex"));
-    if (fromIndex === index) return;
-
-    moveVideoToIndex(fromIndex, index);
-  };
+  }, []);
 
   // Generate thumbnail when video.startTime or video.url changes
   useEffect(() => {
@@ -248,7 +258,7 @@ const VideoBlock = ({
     };
   }, [video.url, video.startTime]);
 
-  // useEffect: displays block thumbnail when video block is large enough
+  // Effect: displays block thumbnail when video block is large enough
   useEffect(() => {
     const updateWidth = () => {
       if (containerRef.current) setBlockWidth(containerRef.current.offsetWidth);
@@ -259,9 +269,9 @@ const VideoBlock = ({
     return () => window.removeEventListener("resize", updateWidth);
   }, [visualStartTime, visualEndTime]);
 
-  // useEffect: switches setIsSelected if user clicks on video block
-  useEffect(() => {
-    const checkGlobalClick = (e: MouseEvent) => {
+  // Global click handler for selection
+  const handleGlobalClick = useCallback(
+    (e: MouseEvent) => {
       const container = containerRef.current;
       if (!container) return;
 
@@ -280,13 +290,17 @@ const VideoBlock = ({
       }
 
       setIsSelected(true);
-    };
+    },
+    [video.id]
+  );
 
-    document.addEventListener("mousedown", checkGlobalClick);
+  // Effect: switches setIsSelected if user clicks on video block
+  useEffect(() => {
+    document.addEventListener("mousedown", handleGlobalClick);
     return () => {
-      document.removeEventListener("mousedown", checkGlobalClick);
+      document.removeEventListener("mousedown", handleGlobalClick);
     };
-  }, [video]);
+  }, [handleGlobalClick]);
 
   // useEffect: update visual time when trim
   useEffect(() => {
@@ -306,7 +320,7 @@ const VideoBlock = ({
       draggable
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
-      onDragEnd={() => setIsDraggingVideo(false)}
+      onDragEnd={handleDragEnd}
       onDrop={handleDragDrop}
       style={{
         left: `${(visualStartTime / timelineDuration) * 100}%`,

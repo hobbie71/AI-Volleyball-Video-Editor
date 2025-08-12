@@ -1,0 +1,65 @@
+$standard-radius: 10px;
+
+.video-block-container {
+  position: absolute;
+  height: 100%;
+  cursor: pointer;
+  border: 2px solid black;
+  border-radius: $standard-radius;
+  overflow: hidden;
+  z-index: 1;
+  background: none;
+  transition:
+    box-shadow 0.2s,
+    border 0.2s,
+    background 0.2s;
+
+  .is-selected {
+    border: 2px solid #1976d2;
+    box-shadow: 0 0 8px 2px #1976d288;
+    background: #e3f2fd;
+    z-index: 2;
+  }
+
+  .is-dragging {
+    opacity: 0.5;
+  }
+}
+
+.video-block {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  background-color: rgb(180, 235, 253);
+  overflow: hidden;
+  transition: background-color 0.2s;
+}
+
+.block-thumbnail-container {
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+
+  .block-thumbnail {
+    top: 0;
+    left: 0;
+    height: 80%;
+    width: auto;
+    object-fit: cover;
+    border-radius: $standard-radius - 2;
+  }
+
+  .block-filename {
+    font-size: 12px;
+    font-weight: 600;
+    color: #222;
+    margin-left: 5px;
+    border-radius: $standard-radius;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

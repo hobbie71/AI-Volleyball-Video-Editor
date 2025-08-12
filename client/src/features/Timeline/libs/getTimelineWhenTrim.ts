@@ -7,13 +7,13 @@ export const getTimelineWhenTrim = (
 ) => {
   const videoIndex = timelineVideos.findIndex((vid) => vid === video);
 
-  video.timelineEndTime -= amountTrimmed;
+  return timelineVideos.map((timelineVideo, i) => {
+    if (i <= videoIndex) return timelineVideo;
 
-  for (let i = videoIndex + 1; i < timelineVideos.length; i++) {
-    const currentVideo = timelineVideos[i];
-
-    currentVideo.timelineStartTime -= amountTrimmed;
-    currentVideo.timelineEndTime -= amountTrimmed;
-  }
-  return timelineVideos;
+    return {
+      ...timelineVideo,
+      timelineStartTime: timelineVideo.timelineStartTime - amountTrimmed,
+      timelineEndTime: timelineVideo.timelineEndTime - amountTrimmed,
+    };
+  });
 };

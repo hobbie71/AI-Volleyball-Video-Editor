@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 // Style import
 import "./VideoPlayer.css";
 
@@ -10,28 +8,8 @@ import VideoElement from "./components/VideoElement";
 // Context imports
 import { useTimeline } from "../Timeline/context/Timeline/useTimeline";
 
-// Hook imports
-import { useVideoPlaybackControl } from "./hooks/useVideoPlaybackControl";
-import { useCurrentTimelineVideo } from "./hooks/useCurrentTimelineVideo";
-
 const VideoPlayer = () => {
   const { timelineVideos } = useTimeline();
-  const { resetAllVideoElementsExcept, resetAllVideoElements } =
-    useVideoPlaybackControl();
-  const { currentVideo } = useCurrentTimelineVideo();
-
-  useEffect(() => {
-    if (currentVideo) {
-      resetAllVideoElementsExcept(currentVideo);
-    } else {
-      resetAllVideoElements();
-    }
-  }, [
-    timelineVideos,
-    currentVideo,
-    resetAllVideoElements,
-    resetAllVideoElementsExcept,
-  ]);
 
   return (
     <div className="video-player">
