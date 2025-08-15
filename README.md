@@ -53,8 +53,10 @@ This project is currently under active development. The major refactoring phase 
 
 **Coming Soon**:
 
+- 🔄 AI-powered video editing
 - 🔄 AI-powered video analysis
 - 🔄 Enhanced user experience
+- 🔄 Shape and text insertion
 
 ## 🚀 Installation
 
