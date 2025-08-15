@@ -8,7 +8,7 @@ import { uploadVideoToBackend } from "../lib/uploadVideoToBackend";
 import { useVideoTimeline } from "../../../features/Timeline/hooks/useVideoTimeline";
 
 // Type Imports
-import { Video } from "../../../types/video.types";
+import { Video } from "../../../../../shared/types/video.types";
 
 // Context Imports
 import { useVideoLibrary } from "../context/VideoLibrary/useVideoLibrary";

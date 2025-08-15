@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { TimelineVideo } from "../../../../types/video.types";
+import { TimelineVideo } from "../../../../../../shared/types/video.types";
 
 type VideoEditingContextType = {
   videoSelected: TimelineVideo | null;

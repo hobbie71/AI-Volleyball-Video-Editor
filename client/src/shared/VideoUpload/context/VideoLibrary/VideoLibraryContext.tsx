@@ -1,5 +1,5 @@
 import { createContext, useCallback, useState } from "react";
-import { Video } from "../../../../types/video.types";
+import { Video } from "../../../../../../shared/types/video.types";
 
 type VideoLibraryContextType = {
   videos: Video[];

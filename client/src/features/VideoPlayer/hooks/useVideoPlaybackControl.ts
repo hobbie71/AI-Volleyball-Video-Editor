@@ -10,7 +10,7 @@ import {
 // Hook imports
 import { useVideoRendering } from "../context/VideoRendering/useVideoRendering";
 import { useTimeline } from "../../Timeline/context/Timeline/useTimeline";
-import { TimelineVideo } from "../../../types/video.types";
+import { TimelineVideo } from "../../../../../shared/types/video.types";
 import { useCurrentTimelineVideo } from "./useCurrentTimelineVideo";
 
 // Context imports

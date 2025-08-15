@@ -5,7 +5,7 @@ import { useExportSettings } from "../context/useExportSettings";
 import { exportVideo } from "../libs/exportVideo";
 
 // Type imports
-import { ExportSettings } from "../../../types/video.types";
+import { ExportSettings } from "../../../../../shared/types/video.types";
 
 // Context imports
 import { useTimeline } from "../../Timeline/context/Timeline/useTimeline";
@@ -29,8 +29,17 @@ export const useExport = () => {
     return exportSettings;
   }, [bitrate, format, framerate, resolution]);
 
-  const exportTimeline = useCallback(() => {
-    exportVideo(timelineVideos, getExportSettings());
+  const exportTimeline = useCallback(async () => {
+    const res = await exportVideo(timelineVideos, getExportSettings());
+    if (!res) throw new Error("Export failed");
+
+    // Download the exported video
+    const link = document.createElement("a");
+    link.href = res;
+    link.download = `exported_video.${getExportSettings().format}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }, [getExportSettings, timelineVideos]);
 
   const setExportSetting = useCallback((setting: Partial<ExportSettings>) => {

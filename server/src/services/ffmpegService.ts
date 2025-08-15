@@ -4,40 +4,45 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import { v4 as uuidv4 } from "uuid";
 import { ensureExportDirectory } from "../utils/fileUtils";
-import { Video, ExportSettings, MotionEffects } from "../types/types";
+import {
+  TimelineVideo,
+  ExportSettings,
+  MotionEffects,
+} from "@shared/types/video.types";
 
 const execAsync = promisify(exec);
 
 export const trimVideos = async (
   projectFolderDir: string,
-  videos: Video[],
+  videos: TimelineVideo[],
   exportSettings: ExportSettings
 ): Promise<string[]> => {
   return new Promise(async (resolve, reject) => {
     try {
       const trimmedPaths: string[] = [];
-      const totalVideos = videos.length;
 
       for (let i = 0; i < videos.length; i++) {
         const video = videos[i];
-        const motionEffects = video.motionEffects;
+        const motionEffects: MotionEffects | null = video.motionEffects;
         const inputPath = path.resolve(
           __dirname,
           "../../videos",
-          `${video.uploadId}.mp4`
+          `${video.videoId}.mp4`
         );
+
+        // Init ffmpeg command
         const outputPath = path.resolve(projectFolderDir, `snippet_${i}.mp4`);
         const start = video.startTime;
         const duration = video.endTime - video.startTime;
 
-        if (!fs.existsSync(inputPath)) {
-          console.error(`❌ Input file not found: ${inputPath}`);
+        let ffmpegCmd = `ffmpeg -ss ${start} -i "${inputPath}" -t ${duration}`;
+
+        if (!fs.existsSync(inputPath))
           throw new Error(`Input file not found: ${inputPath}`);
-        }
 
         const { resolution, bitrate, framerate } = exportSettings;
 
-        let vf: string = "";
+        // Add motion effects to ffmpeg command
         if (motionEffects) {
           const [resWidth, resHeight] = resolution.split("x").map(Number);
 
@@ -54,17 +59,20 @@ export const trimVideos = async (
           // Rotation Calculations
           const rotationRadians = motionEffects.rotation * (Math.PI / 180);
 
-          vf = `
+          const vf = `
               rotate=${rotationRadians},
               scale=${scaledResWidth}:${scaledResHeight},
               crop=${resWidth}:${resHeight}:${xOffset}:${yOffset}
             `.replace(/\s+/g, ""); // Removes all spaces in string
+
+          ffmpegCmd += ` -vf "${vf}"`;
         }
 
+        // Add export settings to ffmpeg command
+        ffmpegCmd += ` -b:v ${bitrate} -r ${framerate} -c:v libx264 -c:a aac "${outputPath}"`;
+
         console.log(`⚙️ Running ffmpeg for video ${i + 1}...`);
-        await execAsync(
-          `ffmpeg -ss ${start} -i "${inputPath}" -t ${duration} -vf "${vf}" -b:v ${bitrate} -r ${framerate} -c:v libx264 -c:a aac "${outputPath}"`
-        );
+        await execAsync(ffmpegCmd);
         console.log(`✅ Video ${i + 1} processed successfully`);
 
         trimmedPaths.push(outputPath);

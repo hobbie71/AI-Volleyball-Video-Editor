@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 // Type imports
-import { Video, TimelineVideo } from "../../../types/video.types";
+import { Video, TimelineVideo } from "../../../../../shared/types/video.types";
 
 // Lib imports
 import { getTimelineWithNewVideo } from "../libs/getTimelineWithNewVideo";

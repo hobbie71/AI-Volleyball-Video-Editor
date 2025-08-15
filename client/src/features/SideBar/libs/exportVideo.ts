@@ -1,4 +1,7 @@
-import { TimelineVideo, ExportSettings } from "../../../types/video.types";
+import {
+  TimelineVideo,
+  ExportSettings,
+} from "../../../../../shared/types/video.types";
 
 export const exportVideo = async (
   videos: TimelineVideo[],

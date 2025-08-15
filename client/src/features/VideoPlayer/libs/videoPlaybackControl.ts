@@ -1,4 +1,7 @@
-import { TimelineVideo, VideoElementObject } from "../../../types/video.types";
+import {
+  TimelineVideo,
+  VideoElementObject,
+} from "../../../types/video.types";
 
 export const pauseAllVideos = (videoElements: VideoElementObject) => {
   Object.values(videoElements).forEach((video) => {

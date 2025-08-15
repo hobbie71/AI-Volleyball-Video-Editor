@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import "./MediaItem.css";
 
 // Type imports
-import { Video } from "../../../../../types/video.types";
+import { Video } from "../../../../../../../shared/types/video.types";
 
 // Hook imports
 import { useVideoTimeline } from "../../../../Timeline/hooks/useVideoTimeline";

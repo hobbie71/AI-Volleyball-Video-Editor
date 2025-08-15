@@ -1,4 +1,4 @@
-import { MotionEffects } from "../../../types/video.types";
+import { MotionEffects } from "../../../../../shared/types/video.types";
 
 export const drawVideoFrame = (
   canvas: HTMLCanvasElement,

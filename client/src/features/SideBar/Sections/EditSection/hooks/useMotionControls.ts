@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 
 // Type imports
-import { MotionEffects } from "../../../../../types/video.types";
+import { MotionEffects } from "../../../../../../../shared/types/video.types";
 
 // Hook imports
 import { useMotionEffects } from "../../../hooks/useMotionEffects";

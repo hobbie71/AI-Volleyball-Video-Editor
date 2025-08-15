@@ -1,4 +1,4 @@
-import { Video } from "../../../types/video.types";
+import { Video } from "../../../../../shared/types/video.types";
 import { v4 as uuidv4 } from "uuid";
 
 export const getVideoMetaData = (file: File): Promise<Video> => {

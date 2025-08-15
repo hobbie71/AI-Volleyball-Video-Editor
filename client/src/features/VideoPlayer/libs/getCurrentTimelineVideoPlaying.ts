@@ -1,4 +1,4 @@
-import { TimelineVideo } from "../../../types/video.types";
+import { TimelineVideo } from "../../../../../shared/types/video.types";
 
 export const getCurrentTimelineVideoPlaying = (
   timeSeconds: number,

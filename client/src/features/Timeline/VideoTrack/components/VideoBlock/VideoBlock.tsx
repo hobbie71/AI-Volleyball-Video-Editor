@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./VideoBlock.scss";
 
 // Type imports
-import { TimelineVideo } from "../../../../../types/video.types";
+import { TimelineVideo } from "../../../../../../../shared/types/video.types";
 
 // Hook imports
 import { useClickedTime } from "../../../hooks/useClickedTime";

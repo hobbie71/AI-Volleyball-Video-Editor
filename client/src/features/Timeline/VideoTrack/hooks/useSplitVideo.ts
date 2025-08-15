@@ -9,7 +9,7 @@ import { useTimeline } from "../../context/Timeline/useTimeline";
 import { useCurrentTimelineVideo } from "../../../VideoPlayer/hooks/useCurrentTimelineVideo";
 
 // Type imports
-import { TimelineVideo } from "../../../../types/video.types";
+import { TimelineVideo } from "../../../../../../shared/types/video.types";
 
 export const useSplitVideo = () => {
   const { currentTimeRef } = useCurrentTime();

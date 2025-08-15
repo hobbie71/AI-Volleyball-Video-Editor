@@ -1,6 +1,6 @@
 import { useState, useRef, Dispatch, SetStateAction } from "react";
 import { createContext } from "react";
-import { TimelineVideo } from "../../../../types/video.types";
+import { TimelineVideo } from "../../../../../../shared/types/video.types";
 
 type TimelineContextType = {
   timelineContainerRef: React.RefObject<HTMLDivElement | null>;

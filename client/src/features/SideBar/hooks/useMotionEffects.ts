@@ -4,7 +4,10 @@ import { useVideoEditing } from "../../Timeline/context/VideoEditing/useVideoEdi
 import { useTimeline } from "../../Timeline/context/Timeline/useTimeline";
 
 // Type imports
-import { MotionEffects, TimelineVideo } from "../../../types/video.types";
+import {
+  MotionEffects,
+  TimelineVideo,
+} from "../../../../../shared/types/video.types";
 
 export const useMotionEffects = () => {
   const { videoSelected, setVideoSelected } = useVideoEditing();

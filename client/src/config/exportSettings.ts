@@ -1,4 +1,9 @@
-import { Resolution, Format, Bitrate, Framerate } from "../types/video.types";
+import {
+  Resolution,
+  Format,
+  Bitrate,
+  Framerate,
+} from "../../../shared/types/video.types";
 
 export const exportSettingsOptions = {
   resolutions: [
