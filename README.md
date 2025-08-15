@@ -32,24 +32,29 @@ The AI Volleyball Video Editor is a specialized video editing application that l
 
 ## 🚧 Project Status
 
-**Current Phase**: Active Development - Code Refactoring In Progress
+**Current Phase**: Active Development - Feature Implementation & UI Polish
 
-This project is currently under active development. The codebase has recently undergone a major refactoring to implement a UI-based file structure following React best practices. Core features are being implemented and refined.
+This project is currently under active development. The major refactoring phase is complete, implementing a UI-based file structure following React best practices. Core features are now implemented and the focus has shifted to feature enhancement and user interface polishing.
 
 **What's Working**:
 
 - ✅ Video import and library management
 - ✅ Canvas-based video rendering
 - ✅ Modular hook and component architecture
-  <!-- - ✅ Timeline-based video editing interface -->
-  <!-- - ✅ Motion effects system -->
+- ✅ Timeline-based video editing interface
+- ✅ Motion effects system
+- ✅ Export functionality
+
+**Currently Working On**:
+
+- 🔄 User interface polish and styling improvements
+- 🔄 Advanced editing features
+- 🔄 Performance optimizations
 
 **Coming Soon**:
 
 - 🔄 AI-powered video analysis
-- 🔄 Advanced editing features
-- 🔄 Export functionality
-- 🔄 User interface polish
+- 🔄 Enhanced user experience
 
 ## 🚀 Installation
 
@@ -58,6 +63,10 @@ This project is currently under active development. The codebase has recently un
 - **Node.js** (v18 or higher) - [Download here](https://nodejs.org/)
 - **npm** or **yarn** package manager
 - **Git** - [Download here](https://git-scm.com/)
+- **FFmpeg** - Required for video processing
+  - **macOS**: `brew install ffmpeg`
+  - **Windows**: [Download from ffmpeg.org](https://ffmpeg.org/download.html)
+  - **Linux**: `sudo apt install ffmpeg` (Ubuntu/Debian) or equivalent for your distribution
 
 ### Backend Setup
 
@@ -110,6 +119,7 @@ The installation process will automatically install all required dependencies in
 - React 18+ with TypeScript
 - Vite (build tool)
 - Canvas API for video rendering
+- SCSS/CSS for styling
 - UUID for unique identifiers
 
 **Backend**:
@@ -118,6 +128,7 @@ The installation process will automatically install all required dependencies in
 - TypeScript
 - FFmpeg for video processing
 - Multer for file uploads
+- Enhanced error handling and validation
 
 ## 🎯 Usage
 
@@ -126,7 +137,7 @@ The installation process will automatically install all required dependencies in
 3. **Edit Timeline**: Navigate to the editing interface to arrange and trim video clips
 4. **Apply Effects**: Use the sidebar controls to add motion effects and adjustments
 5. **Preview**: Use the canvas player to preview your edits in real-time
-6. **Export**: (Coming soon) Export your finished video for sharing
+6. **Export**: Export your finished video for sharing on YouTube and other platforms
 
 ## 🛠 Tech Stack
 
@@ -136,7 +147,7 @@ The installation process will automatically install all required dependencies in
 - **TypeScript** - Type safety
 - **Vite** - Build tool and dev server
 - **Canvas API** - Video rendering
-- **CSS3** - Styling
+- **SCSS/CSS3** - Styling and design system
 
 ### Backend
 
