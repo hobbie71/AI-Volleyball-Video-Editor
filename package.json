@@ -9,7 +9,8 @@
   "devDependencies": {
     "@types/mime-types": "^3.0.1",
     "concurrently": "^8.0.1",
-    "sass-embedded": "^1.90.0"
+    "sass-embedded": "^1.90.0",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "mime-types": "^3.0.1",
