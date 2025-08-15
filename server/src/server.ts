@@ -1,10 +1,8 @@
 import app from './app';
-import dotenv from 'dotenv';
+import { config } from './config/environment';
+import { Logger } from './utils/logger';
 
-dotenv.config();
-
-const PORT = process.env.PORT || 4000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(config.port, () => {
+  Logger.info(`Server running on http://localhost:${config.port}`);
+  Logger.info(`Environment: ${config.nodeEnv}`);
 });

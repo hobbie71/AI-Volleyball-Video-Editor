@@ -1,12 +1,13 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { trimVideos, mergeVideos } from "../services/ffmpegService";
 import {
   moveFileToExportFolder,
   cleanUpTemp,
   createProjectFolderDirectory,
 } from "../utils/fileUtils";
+import { HTTP_STATUS, ERROR_MESSAGES } from "../constants";
 
-export const exportVideo = async (req: Request, res: Response) => {
+export const exportVideo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Create project folder
     const projectFolderDir = createProjectFolderDirectory();
@@ -37,8 +38,14 @@ export const exportVideo = async (req: Request, res: Response) => {
     const fileName = outputPath.split("/").pop();
     const url = `/exports/${fileName}`;
     console.log("✅ Export completed successfully - 100%");
-    res.json({ url });
+    
+    res.status(HTTP_STATUS.OK).json({ 
+      success: true,
+      url,
+      message: "Video exported successfully"
+    });
   } catch (error) {
     console.error("❌ Export error:", error);
+    next(error); // Pass error to error handler middleware
   }
 };
